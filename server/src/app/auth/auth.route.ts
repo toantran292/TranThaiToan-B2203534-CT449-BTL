@@ -1,18 +1,18 @@
+import { authController } from "@auth/auth.controller";
+import { BaseRoute } from "@global/common/BaseClass";
 import { Router } from "express";
 
-class AuthRoutes {
-  private router: Router;
-
+class AuthRoute extends BaseRoute {
   constructor() {
-    this.router = Router();
+    super()
   }
 
   public routes(): Router {
-    this.router.post("/register", () => {});
-    this.router.post("/login", () => {});
+    this.router.post("/register", authController.register);
+    this.router.post("/login", authController.login);
 
     return this.router;
   }
 }
 
-export const authRouters: AuthRoutes = new AuthRoutes();
+export const authRoute: AuthRoute = new AuthRoute();

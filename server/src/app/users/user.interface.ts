@@ -11,6 +11,7 @@ export interface IUserDocument extends Document {
   lastName: string;
   gender: "0" | "1" | "unknow";
   phoneNumber: string;
+  isStaff: boolean;
   birthday: Date;
 
   createdAt: Date;

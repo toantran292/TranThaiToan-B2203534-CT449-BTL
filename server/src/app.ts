@@ -1,26 +1,20 @@
-import compression from "compression";
-import cors from "cors";
-import express from "express";
-import mongoose from "mongoose";
-import configs from "./config";
-import logger from "./utils/logger";
+import { config } from "@root/config";
+import setupdb from "@root/db";
+import Server from "@root/server";
+import express from 'express';
 
-mongoose.connection.on("connected", () => {
-  logger.info("Connected to database successfully!");
-});
-mongoose.connection.on("error", () => {
-  logger.error("Connection error");
-  process.exit();
-});
-mongoose.connect(configs.mongoUrl);
+class Application {
+  public init(): void {
+    this.loadConfig();
+    setupdb();
+    const app: express.Application = express();
+    const server: Server = new Server(app);
+    server.start();
+  }
+  private loadConfig(): void {
+    config.validateConfig()
+  }
+}
 
-const app: express.Application = express();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(compression);
-
-export default app;
-
-// export default new App().app;
+const application: Application = new Application();
+application.init();

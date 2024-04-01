@@ -1,14 +1,16 @@
+import { BaseRoute } from "@global/common/BaseClass";
 import { Router } from "express";
 
-class UserRoutes {
-  private router: Router;
-
+class UserRoute extends BaseRoute {
   constructor() {
-    this.router = Router();
+    super()
   }
+  routes(): Router {
+    this.router.get('', (req, res) => {
+      return res.json({ "ho": "Xin chao" })
+    })
 
-  public routes(): Router {
-    return this.router;
+    return this.router
   }
 }
-export const userRoutes: UserRoutes = new UserRoutes();
+export const userRoute: UserRoute = new UserRoute();

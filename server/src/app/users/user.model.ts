@@ -1,6 +1,6 @@
-import mongoose, { Model, Schema, SchemaOptions, model } from "mongoose";
-import { IUserDocument } from "./user.interface";
 import { compare, hash } from "bcrypt";
+import { Model, Schema, SchemaOptions, model } from "mongoose";
+import { IUserDocument } from "./user.interface";
 
 const userOptions: SchemaOptions = {
   timestamps: true,
@@ -16,14 +16,15 @@ const userSchema: Schema = new Schema(
   {
     firstName: { type: String, default: "" },
     lastName: { type: String, default: "" },
-    birthDay: { type: Date, default: new Date.now() },
+    birthDay: { type: Date, default: () => Date.now() },
     address: { type: String, default: "" },
     gender: { type: String, default: "unknow" },
     phoneNumber: { type: String, default: "" },
+    isStaff: { type: Boolean, default: false },
 
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String },
-    refreshToken: { type: String, default: "" },
+    // refreshToken: { type: String, default: "" },
   },
   userOptions,
 );
