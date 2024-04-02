@@ -1,9 +1,8 @@
 import { loginSchema, registerSchema } from "@auth/auth.schema";
 import { authService } from "@auth/auth.service";
-import { AsyncCatchCustomError } from "@global/decoractors/catchError";
 import { Controller } from "@global/decoractors/controller";
-import { JoiValidation } from "@global/decoractors/joiValidation";
 import { Post } from "@global/decoractors/route";
+import { Validate } from "@global/decoractors/validate";
 import { BadRequestError, Forbidden } from "@global/utils/errorHandler";
 import { Request, Response } from "express";
 import { IUserDocument } from "../users/user.interface";
@@ -12,9 +11,8 @@ import { userService } from "../users/user.service";
 @Controller('/auth')
 class AuthController {
   @Post('/register')
-  @AsyncCatchCustomError
-  @JoiValidation(registerSchema)
-  public async register(req: Request, res: Response) {
+  @Validate(registerSchema)
+  async register(req: Request, res: Response) {
     const { email, password } = req.body;
     const isUserExist: IUserDocument =
       await userService.getUserByEmail(email);
@@ -27,9 +25,8 @@ class AuthController {
   }
 
   @Post('/login')
-  @AsyncCatchCustomError
-  @JoiValidation(loginSchema)
-  public async login(req: Request, res: Response) {
+  @Validate(loginSchema)
+  async login(req: Request, res: Response) {
     const _message_forbidden = 'Email or password is wrong.';
 
     const { email, password } = req.body;

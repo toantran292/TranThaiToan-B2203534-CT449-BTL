@@ -1,4 +1,4 @@
-import { config } from "@root/config";
+import { jwtConfig } from "@cofig/config";
 import { IUserDocument } from "@users/user.interface";
 
 import jwt from "jsonwebtoken";
@@ -9,12 +9,12 @@ class AuthService {
       userId: user.id,
       isAdmin: user.isStaff,
       email: user.email
-    }, config.JWT_ACCESS_TOKEN!, { expiresIn: "1h" });
+    }, jwtConfig.JWT_ACCESS_TOKEN!, { expiresIn: "1h" });
     const refreshToken = jwt.sign({
       userId: user.id,
       isAdmin: user.isStaff,
       email: user.email
-    }, config.JWT_ACCESS_TOKEN!, { expiresIn: "7d" });
+    }, jwtConfig.JWT_ACCESS_TOKEN!, { expiresIn: "7d" });
 
     return { accessToken, refreshToken };
   }

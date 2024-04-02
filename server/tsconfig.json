@@ -30,6 +30,15 @@
       "@core/*": [
         "src/core/*"
       ],
+      "@cofig/*": [
+        "src/config/*"
+      ],
+      "@middleware/*": [
+        "src/middleware/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ],
       "@global/*": [
         "src/shared/*"
       ],
