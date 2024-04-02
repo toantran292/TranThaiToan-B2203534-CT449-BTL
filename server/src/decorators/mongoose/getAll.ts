@@ -1,23 +1,26 @@
-import { CustomError } from "@global/utils/errorHandler";
-import logger from "@global/utils/logger";
+import logger from "@cofig/logger";
 import { NextFunction, Request, Response } from "express";
-import Joi from "joi";
+import HTTP_STATUS from "http-status-codes";
+import { Model } from "mongoose";
 
-export function Validate<T = any>(schema: Joi.ObjectSchema<T>) {
+
+export function MongoGetAll(model: Model<any>) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
+
     descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
       try {
-        await schema.validateAsync(req.body);
+        const documents = await model.find();
+        req.mongoGetAll = documents;
       } catch (error) {
-        logger.error(error)
-
-        if (error instanceof CustomError)
-          return res.status(error.statusCode).json({ message: error.message })
+        logger.debug(error);
+        return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(error);
       }
+
       return originalMethod.call(this, req, res, next);
     }
 
+    return descriptor
   }
 }

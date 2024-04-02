@@ -1,5 +1,5 @@
-import { Controller } from "@global/decoractors/controller";
-import { Get } from "@global/decoractors/route";
+import { Controller } from "@decorators/controller";
+import { Get } from "@decorators/route";
 import { Request, Response } from "express";
 
 @Controller('/dev')

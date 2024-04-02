@@ -39,8 +39,11 @@
       "@modules/*": [
         "src/modules/*"
       ],
-      "@global/*": [
-        "src/shared/*"
+      "@decorators/*": [
+        "src/decorators/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
       ],
       "@auth/*": [
         "src/app/auth/*"

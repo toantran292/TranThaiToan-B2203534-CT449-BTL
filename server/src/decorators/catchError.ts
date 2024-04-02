@@ -1,4 +1,4 @@
-import { CustomError } from "@global/utils/errorHandler";
+import { CustomError } from "@utils/errorHandler";
 import { Request, Response } from "express";
 
 export function CatchCustomError(target: any, key: string, descriptor: PropertyDescriptor) {
