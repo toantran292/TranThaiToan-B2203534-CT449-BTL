@@ -1,19 +1,21 @@
+import 'reflect-metadata';
 // import * as http from "http";
 
+import AuthController from '@auth/auth.controller';
 import { CustomError, IErrorResponse } from '@global/utils/errorHandler';
 import logger from '@global/utils/logger';
+import DevController from '@root/app/dev/DevController';
 import { config } from '@root/config';
-import setupRoutes from '@root/routes';
+import { defineRoutes } from '@root/modules/routes';
 import compression from 'compression';
 import cors from 'cors';
-import { Application, NextFunction, Request, Response, json, urlencoded } from "express";
+import { Express, NextFunction, Request, Response, json, urlencoded } from "express";
 import HTTP_STATUS from 'http-status-codes';
-
 
 const PORT = 3000;
 export default class Server {
-  private app: Application;
-  constructor(app: Application) {
+  private app: Express;
+  constructor(app: Express) {
     this.app = app;
   }
 
@@ -25,21 +27,22 @@ export default class Server {
     this.startServer(this.app);
   }
 
-  private sercurityMiddleware(app: Application): void {
+  private sercurityMiddleware(app: Express): void {
     app.use(cors());
   }
 
-  private standardMiddleware(app: Application): void {
+  private standardMiddleware(app: Express): void {
     app.use(compression())
     app.use(json())
     app.use(urlencoded({ extended: true }));
   }
 
-  private routesMiddleware(app: Application): void {
-    setupRoutes(app);
+  private routesMiddleware(app: Express): void {
+    defineRoutes([AuthController], app);
+    defineRoutes([DevController], app, '/api');
   }
 
-  private globalErrorHandler(app: Application): void {
+  private globalErrorHandler(app: Express): void {
     app.all('*', (req: Request, res: Response) => {
       return res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.method} ${req.originalUrl} not found.` })
     })
@@ -51,7 +54,7 @@ export default class Server {
     })
   }
 
-  private async startServer(app: Application): Promise<void> {
+  private async startServer(app: Express): Promise<void> {
     if (!config.JWT_ACCESS_TOKEN)
       throw new Error('JWT_ACCESS_TOKEN must be provided.');
     try {

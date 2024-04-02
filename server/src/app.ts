@@ -7,7 +7,7 @@ class Application {
   public init(): void {
     this.loadConfig();
     setupdb();
-    const app: express.Application = express();
+    const app = express();
     const server: Server = new Server(app);
     server.start();
   }
@@ -18,3 +18,10 @@ class Application {
 
 const application: Application = new Application();
 application.init();
+
+
+
+// export const application = express();
+// export const Main = () => {
+
+// }

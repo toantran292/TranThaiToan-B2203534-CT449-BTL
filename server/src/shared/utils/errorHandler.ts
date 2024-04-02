@@ -37,3 +37,20 @@ export class BadRequestError extends CustomError {
     super(message)
   }
 }
+
+export class Forbidden extends CustomError {
+  statusCode: number = HTTP_STATUS.FORBIDDEN;
+  status: string = 'forbidden';
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class JoiRequestValidationError extends CustomError {
+  statusCode: number = HTTP_STATUS.BAD_REQUEST;
+  status: string = 'error';
+
+  constructor(message: string) {
+    super(message);
+  }
+}
