@@ -14,7 +14,10 @@ import mongoose from "mongoose";
 const port = 3000;
 export const bootstrap = async () => {
   try {
-    const connection = await mongoose.connect(mongo.MONGO_CONNECTION, mongo.MONGO_OPTIONS);
+    const connection = await mongoose.connect(
+      mongo.MONGO_CONNECTION,
+      mongo.MONGO_OPTIONS,
+    );
     logger.info("----------------------------------------");
     logger.info("Connected to Mongo: ", connection.version);
     logger.info("----------------------------------------");
@@ -25,9 +28,8 @@ export const bootstrap = async () => {
     logger.info("----------------------------------------");
     process.exit(1);
   }
-
   const instance = await Factory.applyMiddlewares(
-    cors(),
+    cors({ origin: "*" }),
     json(),
     urlencoded({ extended: true }),
     loggingHandler(),

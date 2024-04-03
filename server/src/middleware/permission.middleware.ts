@@ -8,8 +8,8 @@ function permissionMiddleware() {
 
       if (!user) throw new Forbidden("Login again!");
 
-      if (!user.isStaff) throw new Forbidden("You not have permission to do this action!");
-
+      if (!user.isStaff)
+        throw new Forbidden("You not have permission to do this action!");
       _next();
     } catch (error) {
       _next(error);

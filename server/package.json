@@ -5,10 +5,7 @@
   "main": "server.ts",
   "scripts": {
     "dev": "NODE_ENV=developments npx tsx --watch src/server.ts",
-    "dev2": "NODE_ENV=developments nodemon --watch './src/**/*.ts' --ext ts --exec 'rimraf ./dist && tsc && tsc-alias && node dist/server.js'",
-    "dev:build": "npm run build; npm run start",
     "build": "rimraf ./dist && tsc && tsc-alias",
-    "build:dev": "rimraf ./dist && tsc --watch && tsc-alias",
     "start": "NODE_ENV=prod node dist/server.js"
   },
   "dependencies": {

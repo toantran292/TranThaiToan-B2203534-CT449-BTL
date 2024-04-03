@@ -1,0 +1,12 @@
+{
+  "files": [],
+  // "include": ["src/**/*.ts", "test/**/*.spec.ts"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}

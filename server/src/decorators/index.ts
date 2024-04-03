@@ -33,27 +33,40 @@ export function Param<T>(property?: keyof T) {
   return mappingParamDecorator({ type: ParameterType.PARAM, property });
 }
 
-export const User = () => mappingParamDecorator({ type: ParameterType.USER });
-export const Request = () => mappingParamDecorator({ type: ParameterType.REQUEST });
-export const Response = () => mappingParamDecorator({ type: ParameterType.RESPONSE });
+export function User<T>(property?: keyof T) {
+  return mappingParamDecorator({ type: ParameterType.USER, property });
+}
+
+export const Request = () =>
+  mappingParamDecorator({ type: ParameterType.REQUEST });
+export const Response = () =>
+  mappingParamDecorator({ type: ParameterType.RESPONSE });
 export const Req = Request;
 export const Res = Response;
 
-export const Get = (path = "/") => mappingMetadataDecorator({ method: "GET", path });
+export const Get = (path = "/") =>
+  mappingMetadataDecorator({ method: "GET", path });
 
-export const Post = (path = "/") => mappingMetadataDecorator({ method: "POST", path });
+export const Post = (path = "/") =>
+  mappingMetadataDecorator({ method: "POST", path });
 
-export const Put = (path = "/") => mappingMetadataDecorator({ method: "PUT", path });
+export const Put = (path = "/") =>
+  mappingMetadataDecorator({ method: "PUT", path });
 
-export const Delete = (path = "/") => mappingMetadataDecorator({ method: "DELETE", path });
+export const Delete = (path = "/") =>
+  mappingMetadataDecorator({ method: "DELETE", path });
 
-export const Patch = (path = "/") => mappingMetadataDecorator({ method: "PATCH", path });
+export const Patch = (path = "/") =>
+  mappingMetadataDecorator({ method: "PATCH", path });
 
-export const All = (path = "/") => mappingMetadataDecorator({ method: "ALL", path });
+export const All = (path = "/") =>
+  mappingMetadataDecorator({ method: "ALL", path });
 
-export const Options = (path = "/") => mappingMetadataDecorator({ method: "OPTIONS", path });
+export const Options = (path = "/") =>
+  mappingMetadataDecorator({ method: "OPTIONS", path });
 
-export const Head = (path = "/") => mappingMetadataDecorator({ method: "HEAD", path });
+export const Head = (path = "/") =>
+  mappingMetadataDecorator({ method: "HEAD", path });
 
 export const Redirect =
   (url: string, statusCode = 301): MethodDecorator =>
@@ -74,9 +87,16 @@ export const StatusCode =
       throw new Error("statusCode cannot be empty.");
     }
 
-    const redirectStatusCode = Reflect.getMetadata(STATUS_CODE, target[propertyKey]);
+    const redirectStatusCode = Reflect.getMetadata(
+      STATUS_CODE,
+      target[propertyKey],
+    );
 
-    Reflect.defineMetadata(STATUS_CODE, redirectStatusCode ? redirectStatusCode : statusCode, target[propertyKey]);
+    Reflect.defineMetadata(
+      STATUS_CODE,
+      redirectStatusCode ? redirectStatusCode : statusCode,
+      target[propertyKey],
+    );
 
     return descriptor;
   };
@@ -113,7 +133,9 @@ export interface IModuleOptions {
   imports?: any[];
 }
 
-export const Module = (options: IModuleOptions = { controllers: [], imports: [] }) => {
+export const Module = (
+  options: IModuleOptions = { controllers: [], imports: [] },
+) => {
   const { controllers = [], imports = [] } = options;
 
   const extraModules: any[] = [];
@@ -136,7 +158,9 @@ export const Hooks =
   };
 
 export const Interceptors =
-  (...interceptor: ((req: express.Request, data: any) => any)[]): MethodDecorator =>
+  (
+    ...interceptor: ((req: express.Request, data: any) => any)[]
+  ): MethodDecorator =>
   (target: any, propertyKey, descriptor) => {
     if (!propertyKey) {
       throw new Error("@Interceptor is not a part of class decorator.");
@@ -176,7 +200,11 @@ export const Multer =
       return { name, maxCount, strategy };
     });
 
-    Reflect.defineMetadata(MULTER_OPTIONS, compact(options), target[propertyKey]);
+    Reflect.defineMetadata(
+      MULTER_OPTIONS,
+      compact(options),
+      target[propertyKey],
+    );
 
     return descriptor;
   };
