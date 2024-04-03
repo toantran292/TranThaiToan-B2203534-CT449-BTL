@@ -7,13 +7,14 @@ import {
   MIDDLEWARES,
   MODULE,
   MULTER_OPTIONS,
+  PARAMTYPES_METADATA,
   REQUEST_METHOD,
   REQUEST_PATH,
   STATUS_CODE,
   URL_REDIRECT,
 } from "@root/constants";
-import { Request, Response } from "express";
-import { compact, isEqual } from "lodash";
+import { NextFunction, Request, Response } from "express";
+import { compact, isEmpty, isEqual } from "lodash";
 
 export const MulterStrategy = Object.freeze({
   SINGLE: "SINGLE",
@@ -21,14 +22,28 @@ export const MulterStrategy = Object.freeze({
   OBJECT: "OBJECT",
 });
 
+export enum ParameterType {
+  BODY = "body",
+  QUERY = "query",
+  PARAM = "params",
+  REQUEST = "request",
+  RESPONSE = "response",
+  NEXT = "next",
+}
+
+interface IParam {
+  type: any;
+  property: string;
+  parameterIndex: number;
+}
+
 export const last = (array: any[]) => {
   var length = array == null ? 0 : array.length;
   return length ? array[length - 1] : undefined;
 };
-
 export const mappingMetadataDecorator =
   ({ method = "GET", path = "/" }): MethodDecorator =>
-  (target: any, propertyKey, descriptor) => {
+  (target: any, propertyKey, descriptor: PropertyDescriptor) => {
     if (!path) {
       throw new Error("Path cannot be empty.");
     }
@@ -38,6 +53,22 @@ export const mappingMetadataDecorator =
 
     return descriptor;
   };
+
+export function mappingParamDecorator<T>({
+  type = ParameterType.BODY,
+  property = undefined,
+}: {
+  type: ParameterType;
+  property?: keyof T;
+}): ParameterDecorator {
+  return (target: any, propertyKey, parameterIndex) => {
+    const args = Reflect.getMetadata(PARAMTYPES_METADATA, target[propertyKey!]) || [];
+    Reflect.defineMetadata(PARAMTYPES_METADATA, [...args, { type, property, parameterIndex }], target[propertyKey!]);
+  };
+}
+
+// export const mappingParamDecorator =
+//   ({ type = ParameterType.BODY, property = "" }: { type: ParameterType; property?: string }): ParameterDecorator =>
 
 export const mappingMiddlewares = (middlewares: any[] = []) =>
   compact(
@@ -93,43 +124,60 @@ export const mappingModuleDecorator =
 
             const interceptors = Reflect.getMetadata(INTERCEPTOR, controllerTarget);
 
-            const resolver = (req: Request, res: Response) => {
-              return Promise.resolve(controllerTarget.bind(instance)(req, res)).then((result) => {
-                if (isEqual(result, res)) {
-                  return result;
-                }
-
-                const handleMappingResolver = (result: any) => {
-                  if (header) {
-                    res.set(header);
+            const params: IParam[] = Reflect.getMetadata(PARAMTYPES_METADATA, controllerTarget) || [];
+            const resolver = (req: Request, res: Response, next: NextFunction) => {
+              const args: any[] = [];
+              params
+                .sort((a, b) => a.parameterIndex - b.parameterIndex)
+                .forEach((param) => {
+                  if (param.type === ParameterType.REQUEST) args.push(req);
+                  else if (param.type === ParameterType.RESPONSE) args.push(res);
+                  else if (param.type === ParameterType.NEXT) args.push(next);
+                  else {
+                    let type = req[param.type];
+                    if (!isEmpty(param.property)) type = type[param.property];
+                    args.push(type);
+                  }
+                });
+              return Promise.resolve(controllerTarget.bind(instance)(...args))
+                .then((result) => {
+                  if (isEqual(result, res)) {
+                    return result;
                   }
 
-                  if (urlRedirect) return res.redirect(status, urlRedirect);
+                  const handleMappingResolver = (result: any) => {
+                    if (header) {
+                      res.set(header);
+                    }
 
-                  return res.status(status).json(result);
-                };
+                    if (urlRedirect) return res.redirect(status, urlRedirect);
 
-                if (interceptors && interceptors.length !== 0) {
-                  return Promise.all(
-                    interceptors.map((interceptor: any) => {
-                      if (interceptor && typeof interceptor === "function") {
-                        return Promise.resolve(interceptor(req, result));
-                      }
-                      return Promise.resolve(null);
-                    }),
-                  )
-                    .then((nestedResults) => {
-                      return handleMappingResolver(last(nestedResults) || result);
-                    })
-                    .catch((error) => {
-                      throw error;
-                    });
-                }
+                    return res.status(status).json(result);
+                  };
 
-                return handleMappingResolver(result);
-              });
+                  if (interceptors && interceptors.length !== 0) {
+                    return Promise.all(
+                      interceptors.map((interceptor: any) => {
+                        if (interceptor && typeof interceptor === "function") {
+                          return Promise.resolve(interceptor(req, result));
+                        }
+                        return Promise.resolve(null);
+                      }),
+                    )
+                      .then((nestedResults) => {
+                        return handleMappingResolver(last(nestedResults) || result);
+                      })
+                      .catch((error) => {
+                        throw error;
+                      });
+                  }
+
+                  return handleMappingResolver(result);
+                })
+                .catch((err: any) => {
+                  next(err);
+                });
             };
-            // console.log(`${method} /${compact(`${prefix}/${realPath}`.split("/")).join("/")}`);
             modules.push({
               path: `/${compact(`${prefix}/${realPath}`.split("/")).join("/")}`,
               method,

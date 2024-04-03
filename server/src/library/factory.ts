@@ -38,15 +38,13 @@ class Factory {
     }
 
     const modules: Module[] = Reflect.getMetadata(MODULE, moduleCls.prototype) || [];
-    // console.log(modules);
+
     const hooks = Reflect.getMetadata(HOOKS, moduleCls.prototype);
 
     const haveHooks = Array.isArray(hooks) && compact(hooks).length !== 0;
 
     if ((typeof options === "boolean" && options) || (options && options.debug)) {
       logger.info("Modules are mapped.");
-
-      console.log(modules);
 
       if (haveHooks) {
         logger.info(`List of hook.`);

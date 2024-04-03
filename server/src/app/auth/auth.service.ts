@@ -1,4 +1,4 @@
-import { LoginSchema, RegiserSchema } from "@auth/auth.schema";
+import { AuthRegisterDTO } from "@auth/dto";
 import { jwtConfig } from "@cofig/config";
 import { Injectable } from "@decorators";
 import { IUserDocument } from "@users/user.interface";
@@ -8,14 +8,14 @@ import jwt from "jsonwebtoken";
 
 @Injectable()
 class AuthService {
-  async register(data: RegiserSchema) {}
-
-  async login(data: LoginSchema, existingUser: IUserDocument) {
+  async login(authRegisterDTO: AuthRegisterDTO, existingUser: IUserDocument) {
     const _message_forbidden = "Email or password is wrong.";
+
+    const { password } = authRegisterDTO;
 
     if (!existingUser) throw new Forbidden(_message_forbidden);
 
-    const validPassword = await existingUser.comparePassword(data.password);
+    const validPassword = await existingUser.comparePassword(password);
     if (!validPassword) throw new Forbidden(_message_forbidden);
     const token = this.signToken({ user: existingUser });
     return token;

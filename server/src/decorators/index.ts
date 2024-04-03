@@ -12,9 +12,31 @@ import {
   STATUS_CODE,
   URL_REDIRECT,
 } from "@root/constants";
-import { MulterStrategy, mappingMetadataDecorator, mappingMiddlewares, mappingModuleDecorator } from "@utils";
-import { Request } from "express";
+import {
+  MulterStrategy,
+  ParameterType,
+  mappingMetadataDecorator,
+  mappingMiddlewares,
+  mappingModuleDecorator,
+  mappingParamDecorator,
+} from "@utils";
+import express from "express";
 import { compact } from "lodash";
+
+export function Body<T>(property?: keyof T) {
+  return mappingParamDecorator({ type: ParameterType.BODY, property });
+}
+export function Query<T>(property?: keyof T) {
+  return mappingParamDecorator({ type: ParameterType.QUERY, property });
+}
+export function Param<T>(property?: keyof T) {
+  return mappingParamDecorator({ type: ParameterType.PARAM, property });
+}
+
+export const Request = () => mappingParamDecorator({ type: ParameterType.REQUEST });
+export const Response = () => mappingParamDecorator({ type: ParameterType.RESPONSE });
+export const Req = Request;
+export const Res = Response;
 
 export const Get = (path = "/") => mappingMetadataDecorator({ method: "GET", path });
 
@@ -113,7 +135,7 @@ export const Hooks =
   };
 
 export const Interceptors =
-  (...interceptor: ((req: Request, data: any) => any)[]): MethodDecorator =>
+  (...interceptor: ((req: express.Request, data: any) => any)[]): MethodDecorator =>
   (target: any, propertyKey, descriptor) => {
     if (!propertyKey) {
       throw new Error("@Interceptor is not a part of class decorator.");
@@ -223,5 +245,3 @@ export const Dependencies =
 
     Reflect.defineMetadata(DEPENDENCIES, dependencies, target);
   };
-
-export * from "./validate";

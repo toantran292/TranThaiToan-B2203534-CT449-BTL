@@ -5,12 +5,16 @@
   "main": "server.ts",
   "scripts": {
     "dev": "NODE_ENV=developments npx tsx --watch src/server.ts",
+    "dev2": "NODE_ENV=developments nodemon --watch './src/**/*.ts' --ext ts --exec 'rimraf ./dist && tsc && tsc-alias && node dist/server.js'",
+    "dev:build": "npm run build; npm run start",
     "build": "rimraf ./dist && tsc && tsc-alias",
+    "build:dev": "rimraf ./dist && tsc --watch && tsc-alias",
     "start": "NODE_ENV=prod node dist/server.js"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -37,6 +41,7 @@
     "@types/multer": "^1.4.11",
     "@types/node": "^20.11.25",
     "@typescript-eslint/parser": "^7.3.1",
+    "nodemon": "^3.1.0",
     "reflect-metadata": "^0.2.2",
     "rimraf": "^5.0.5",
     "tsc-alias": "^1.8.8",
