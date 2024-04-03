@@ -1,4 +1,4 @@
-import { CustomError } from "@utils/errorHandler";
+import { CustomError } from "@utils";
 import { Request, Response } from "express";
 
 export function CatchCustomError(target: any, key: string, descriptor: PropertyDescriptor) {
@@ -9,13 +9,11 @@ export function CatchCustomError(target: any, key: string, descriptor: PropertyD
     try {
       return method.apply(this, args);
     } catch (error) {
-      if (error instanceof CustomError)
-        res.status(error.statusCode).json({ message: error.message })
+      if (error instanceof CustomError) res.status(error.statusCode).json({ message: error.message });
     }
-  }
+  };
   return descriptor;
 }
-
 
 export function AsyncCatchCustomError(target: any, key: string, descriptor: PropertyDescriptor) {
   const method = descriptor.value;
@@ -25,9 +23,8 @@ export function AsyncCatchCustomError(target: any, key: string, descriptor: Prop
     try {
       return await method.apply(this, args);
     } catch (error) {
-      if (error instanceof CustomError)
-        res.status(error.statusCode).json({ message: error.message })
+      if (error instanceof CustomError) res.status(error.statusCode).json({ message: error.message });
     }
-  }
+  };
   return descriptor;
 }

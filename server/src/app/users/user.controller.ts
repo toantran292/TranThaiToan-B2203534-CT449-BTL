@@ -1,42 +1,32 @@
-import { Controller } from "@decorators/controller";
-import { Delete, Get, Patch, Post } from "@decorators/route";
-import { Request, Response } from "express";
+import { Controller, Delete, Get, Patch, Post } from "@decorators";
 
-@Controller('/users')
+@Controller("/users")
 class UserController {
-
+  constructor() {}
   @Get()
-  // @MongoGetAll(UserModel)
-  getAll(req: Request, res: Response) {
-    return {
-      choDat: 'khung',
-      Tri: 'dien',
-    }
-
+  getAll() {
+    throw new Error("HIHIHI");
   }
 
-  @Post('')
-  create(req: Request, res: Response) {
-    return 'asdhasjkdhaskjd'
+  @Post()
+  create() {
+    return {};
   }
 
-  @Get('/:id')
-  // @MongoGet(UserModel)
-  getOne(req: Request, res: Response) {
-    return 'asdhasjkdhaskjd'
+  @Get("/:id")
+  getOne(): string {
+    return "id";
   }
 
-  @Patch('/:id')
-  update(req: Request, res: Response) {
-    return 'asdhasjkdhaskjd'
+  @Patch("/:id")
+  update() {
+    return "asdhasjkdhaskjd";
   }
 
-  @Delete('/:id')
-  delete(req: Request, res: Response) {
-    return { message: 'deleted' };
+  @Delete("/:id")
+  delete() {
+    return { message: "deleted" };
   }
-
 }
-
 
 export default UserController;

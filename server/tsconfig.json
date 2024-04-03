@@ -39,11 +39,14 @@
       "@modules/*": [
         "src/modules/*"
       ],
-      "@decorators/*": [
-        "src/decorators/*"
+      "@decorators": [
+        "src/decorators/index"
       ],
-      "@utils/*": [
-        "src/utils/*"
+      "@utils": [
+        "src/utils/index"
+      ],
+      "@interfaces": [
+        "src/interfaces/index"
       ],
       "@auth/*": [
         "src/app/auth/*"
