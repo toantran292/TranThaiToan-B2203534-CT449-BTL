@@ -20,4 +20,5 @@ function validateBody<T = any>(dtoClass: any) {
     }
   };
 }
+
 export default validateBody;

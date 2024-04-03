@@ -25,7 +25,7 @@ class AuthService {
     const accessToken = jwt.sign(
       {
         userId: user.id,
-        isAdmin: user.isStaff,
+        isStaff: user.isStaff,
         email: user.email,
       },
       jwtConfig.JWT_ACCESS_TOKEN!,
@@ -34,7 +34,7 @@ class AuthService {
     const refreshToken = jwt.sign(
       {
         userId: user.id,
-        isAdmin: user.isStaff,
+        isStaff: user.isStaff,
         email: user.email,
       },
       jwtConfig.JWT_ACCESS_TOKEN!,

@@ -29,6 +29,7 @@ export enum ParameterType {
   REQUEST = "request",
   RESPONSE = "response",
   NEXT = "next",
+  USER = "user",
 }
 
 interface IParam {

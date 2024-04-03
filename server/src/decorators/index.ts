@@ -33,6 +33,7 @@ export function Param<T>(property?: keyof T) {
   return mappingParamDecorator({ type: ParameterType.PARAM, property });
 }
 
+export const User = () => mappingParamDecorator({ type: ParameterType.USER });
 export const Request = () => mappingParamDecorator({ type: ParameterType.REQUEST });
 export const Response = () => mappingParamDecorator({ type: ParameterType.RESPONSE });
 export const Req = Request;
