@@ -43,7 +43,7 @@ services:
     volumes:
       - ./server:/app:z
     environment:
-      - MONGO_CONNECTION=mongodb://mongodb:27017
+      - MONGO_CONNECTION=mongodb://mongodb:27017/bookstore
     depends_on:
       - mongodb
     command: bash -c "npm i && npm run dev"

@@ -1,13 +1,13 @@
 import { Controller, Delete, Get, Patch, Post, User } from "@decorators";
 import jwtMiddleware from "@middleware/jwt.middleware";
+import permissionMiddleware from "@middleware/permission.middleware";
 
-@Controller("/api/users", jwtMiddleware())
+@Controller("/api/users", jwtMiddleware(), permissionMiddleware())
 class UserController {
   constructor() {}
   @Get()
   getAll(@User() user) {
     console.log(user);
-    // throw new Error("HIHIHI");
     return { user, url: process.env.MONGO_CONNECTION };
   }
 
