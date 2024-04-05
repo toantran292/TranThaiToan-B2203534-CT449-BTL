@@ -9,11 +9,11 @@
     @finish-failed="onFinishFailed"
   >
     <a-form-item
-      label="Username"
-      name="username"
-      :rules="[{ required: true, message: 'Please input your username!' }]"
+      label="Email"
+      name="email"
+      :rules="[{ required: true, message: 'Please input your email!' }]"
     >
-      <a-input v-model:value="formState.username" />
+      <a-input v-model:value="formState.email" />
     </a-form-item>
 
     <a-form-item
@@ -34,22 +34,25 @@
   </a-form>
 </template>
 <script setup lang="ts">
+import { login } from '@/api/auth.api'
+import type { ILoginPayload } from '@/interfaces/auth.interface'
 import { reactive } from 'vue'
 
-interface FormState {
-  username: string
-  password: string
-  remember: boolean
+interface IFormState extends ILoginPayload {
+  remember?: boolean
 }
 
-const formState = reactive<FormState>({
-  username: '',
-  password: '',
+const formState = reactive<IFormState>({
+  email: 'test@gmail.com',
+  password: '123456',
   remember: true
 })
 
-const onFinish = (values: any) => {
-  console.log('Success:', values)
+const onFinish = async (values: IFormState) => {
+  delete values.remember
+  const res = await login(values)
+  console.log({ res })
+  // console.log('Success:', values)
 }
 
 const onFinishFailed = (errorInfo: any) => {

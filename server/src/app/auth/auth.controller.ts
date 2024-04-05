@@ -24,8 +24,8 @@ class AuthController {
     if (isUserExist) throw new BadRequestError("Email already existed.");
 
     const user = await this.userService.createUser({ email, password });
-    const token = this.authService.signToken({ user });
-    return token;
+    const data = this.authService.signToken(user);
+    return data;
   }
 
   @Post("/login")

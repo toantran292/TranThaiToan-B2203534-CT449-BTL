@@ -17,31 +17,28 @@ class AuthService {
 
     const validPassword = await existingUser.comparePassword(password);
     if (!validPassword) throw new Forbidden(_message_forbidden);
-    const token = this.signToken({ user: existingUser });
-    return token;
+    const data = this.signToken(existingUser);
+    return data;
   }
 
-  signToken({ user }: { user: IUserDocument }) {
-    const accessToken = jwt.sign(
-      {
-        userId: user.id,
-        isStaff: user.isStaff,
-        email: user.email,
-      },
-      jwtConfig.JWT_ACCESS_TOKEN!,
-      { expiresIn: "1h" },
-    );
-    const refreshToken = jwt.sign(
-      {
-        userId: user.id,
-        isStaff: user.isStaff,
-        email: user.email,
-      },
-      jwtConfig.JWT_ACCESS_TOKEN!,
-      { expiresIn: "7d" },
-    );
+  signToken(user: IUserDocument) {
+    const userData = this.getUserData(user);
+    const accessToken = jwt.sign(userData, jwtConfig.JWT_ACCESS_TOKEN!, {
+      expiresIn: "1h",
+    });
+    const refreshToken = jwt.sign(userData, jwtConfig.JWT_REFRESH_TOKEN!, {
+      expiresIn: "7d",
+    });
 
-    return { accessToken, refreshToken };
+    return { user: userData, token: { accessToken, refreshToken } };
+  }
+
+  getUserData(user: IUserDocument) {
+    return {
+      userId: user.id,
+      isStaff: user.isStaff,
+      email: user.email,
+    };
   }
 }
 
