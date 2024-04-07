@@ -8,8 +8,8 @@ import { compact } from "lodash";
 import multer from "multer";
 
 export interface IFactoryOptions {
-  debug: boolean;
-  multer: multer.Options;
+  debug?: boolean;
+  multer?: multer.Options;
 }
 
 export interface IFactoryHandler {
@@ -37,13 +37,17 @@ class Factory {
       throw new Error(`Module is required in Factory. You're missing module.`);
     }
 
-    const modules: Module[] = Reflect.getMetadata(MODULE, moduleCls.prototype) || [];
+    const modules: Module[] =
+      Reflect.getMetadata(MODULE, moduleCls.prototype) || [];
 
     const hooks = Reflect.getMetadata(HOOKS, moduleCls.prototype);
 
     const haveHooks = Array.isArray(hooks) && compact(hooks).length !== 0;
 
-    if ((typeof options === "boolean" && options) || (options && options.debug)) {
+    if (
+      (typeof options === "boolean" && options) ||
+      (options && options.debug)
+    ) {
       logger.info("Modules are mapped.");
 
       if (haveHooks) {
@@ -94,41 +98,53 @@ class Factory {
         );
       } else if (this.#upload && multerOptions.length !== 0) {
         if (multerOptions.length > 1) {
-          const opts: multer.Field[] = multerOptions.map((name, maxCount) => ({ name, maxCount } as multer.Field));
+          const opts: multer.Field[] = multerOptions.map(
+            (name, maxCount) => ({ name, maxCount } as multer.Field),
+          );
 
-          this.app[method.toLowerCase() as keyof Express](path, this.#upload.fields(opts), [...middlewares, resolver]);
+          this.app[method.toLowerCase() as keyof Express](
+            path,
+            this.#upload.fields(opts),
+            [...middlewares, resolver],
+          );
         } else {
           const { name, maxCount, strategy } = last(multerOptions) || {};
 
           switch (strategy) {
             case "SINGLE": {
-              this.app[method.toLowerCase() as keyof Express](path, this.#upload.single(name), [
-                ...middlewares,
-                resolver,
-              ]);
+              this.app[method.toLowerCase() as keyof Express](
+                path,
+                this.#upload.single(name),
+                [...middlewares, resolver],
+              );
 
               break;
             }
             case "ARRAY": {
-              this.app[method.toLowerCase() as keyof Express](path, this.#upload.array(name, maxCount), [
-                ...middlewares,
-                resolver,
-              ]);
+              this.app[method.toLowerCase() as keyof Express](
+                path,
+                this.#upload.array(name, maxCount),
+                [...middlewares, resolver],
+              );
 
               break;
             }
             default: {
-              this.app[method.toLowerCase() as keyof Express](path, this.#upload.fields([{ name, maxCount }]), [
-                ...middlewares,
-                resolver,
-              ]);
+              this.app[method.toLowerCase() as keyof Express](
+                path,
+                this.#upload.fields([{ name, maxCount }]),
+                [...middlewares, resolver],
+              );
 
               break;
             }
           }
         }
       } else {
-        this.app[method.toLowerCase() as keyof Express](path, [...middlewares, resolver]);
+        this.app[method.toLowerCase() as keyof Express](path, [
+          ...middlewares,
+          resolver,
+        ]);
       }
     });
 
@@ -139,7 +155,14 @@ class Factory {
     return this;
   }
 
-  static applyMiddlewares(...handlers: (RequestHandler | IFactoryHandler | ErrorRequestHandler | undefined)[]) {
+  static applyMiddlewares(
+    ...handlers: (
+      | RequestHandler
+      | IFactoryHandler
+      | ErrorRequestHandler
+      | undefined
+    )[]
+  ) {
     handlers.forEach((handler) => {
       if (
         (typeof handler !== "function" && typeof handler !== "object") ||
@@ -166,6 +189,12 @@ class Factory {
 
       return this.app.use(handler as RequestHandler);
     });
+
+    return this;
+  }
+
+  static serveStaticDir(root: string, options = {}) {
+    this.app.use(express.static(root, options));
 
     return this;
   }

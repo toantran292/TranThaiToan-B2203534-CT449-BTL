@@ -17,7 +17,12 @@
         </a-menu>
       </div>
       <div :style="{ padding: '5px' }">
-        <a-button @click="handleLogin" type="primary" danger block>Đăng xuất</a-button>
+        <a-button @click="handleLogin" type="primary" danger block>
+          <template #icon>
+            <fas-icon :icon="faRightFromBracket" />
+          </template>
+          <span v-if="!collapsed"> Đăng xuất </span>
+        </a-button>
       </div>
     </a-flex>
   </a-layout-sider>
@@ -26,7 +31,7 @@
 <script setup props="props" lang="ts">
 import { useAuthStore } from '@/stores'
 import { UserOutlined } from '@ant-design/icons-vue'
-import { faBook } from '@fortawesome/free-solid-svg-icons'
+import { faBook, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { notification } from 'ant-design-vue'
 
 const collapsed = defineModel('collapsed')

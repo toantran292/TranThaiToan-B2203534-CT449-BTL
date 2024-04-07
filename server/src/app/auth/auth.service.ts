@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 @Injectable()
 class AuthService {
   async login(authRegisterDTO: AuthRegisterDTO, existingUser: IUserDocument) {
-    const _message_forbidden = "Email or password is wrong.";
+    const _message_forbidden = "Sai tài khoản hoặc mật khẩu.";
 
     const { password } = authRegisterDTO;
 

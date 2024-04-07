@@ -1,3 +1,4 @@
+import { ClassValidateError } from "@utils";
 import { plainToClass } from "class-transformer";
 import { validate } from "class-validator";
 import { NextFunction, Request, Response } from "express";
@@ -8,14 +9,12 @@ function validateBody<T = any>(dtoClass: any) {
       const instance = plainToClass(dtoClass, req.body) as T;
       const errors = await validate(instance as object, {
         whitelist: true,
-        forbidNonWhitelisted: true,
       });
 
       if (errors.length > 0) {
-        const errorMessages = errors
-          .map((error) => Object.values(error.constraints as any))
-          .flat();
-        return res.status(400).json({ errors: errorMessages });
+        throw new ClassValidateError(
+          Object.values(errors[0].constraints as any)[0] as string,
+        );
       }
 
       req.body = instance;

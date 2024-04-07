@@ -1,6 +1,6 @@
 import api from '@/api/axiosInterceptor'
-import type { AxiosResponse } from 'axios'
 
+const baseUrl = '/api'
 export interface IGetPayload {
   source: string
 }
@@ -16,27 +16,22 @@ export interface ICreatePayload<T = any> extends IGetPayload {
   data: T
 }
 
-export const getAll = ({ source }: IGetPayload) => {
-  return api.get(`/${source}`)
+export const getAll = <T = any>({ source }: IGetPayload) => {
+  return api.get(`${baseUrl}/${source}`) as any as Promise<T[]>
 }
 
-export const getOne = ({ source, id }: IGetOnePayload) => {
-  return api.get(`/${source}/${id}`)
+export const getOne = <T = any>({ source, id }: IGetOnePayload) => {
+  return api.get(`${baseUrl}/${source}/${id}`) as Promise<T>
 }
 
-export const updateOne: <T = any>(
-  payload: IUpdatePayload<T>
-) => Promise<AxiosResponse<any, any>> = ({ source, id, data }) => {
-  return api.patch(`/${source}/${id}`, {
+export const updateOne = <T = any>({ source, id, data }: IUpdatePayload<T>) => {
+  return api.patch(`${baseUrl}/${source}/${id}`, {
     data
   })
 }
 
-export const create: <T = any>(payload: ICreatePayload<T>) => Promise<AxiosResponse<any, any>> = ({
-  source,
-  data
-}) => {
-  return api.patch(`/${source}`, {
+export const create = <T = any>({ source, data }: ICreatePayload<T>) => {
+  return api.patch(`${baseUrl}/${source}`, {
     data
   })
 }

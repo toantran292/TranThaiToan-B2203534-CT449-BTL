@@ -1,9 +1,10 @@
 import { useAuthStore } from '@/stores'
-import BookView from '@/views/BookView.vue'
+import BookView from '@/views/Book/BookView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
-import UserView from '@/views/UserView.vue'
+import UserCreate from '@/views/User/UserCreate.vue'
+import UserView from '@/views/User/UserView.vue'
 import { notification } from 'ant-design-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -23,16 +24,20 @@ const router = createRouter({
       component: HomeView,
       children: [
         {
-          path: '/users',
+          path: 'users',
           name: 'user',
           component: UserView,
-          props: true
+          children: []
+        },
+        {
+          path: 'users/create',
+          name: 'user:create',
+          component: UserCreate
         },
         {
           path: 'books',
           name: 'book',
           component: BookView
-          // props: (route) => ({ query: route.query })
         }
       ]
     }

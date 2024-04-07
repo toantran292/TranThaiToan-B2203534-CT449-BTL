@@ -21,7 +21,7 @@ class AuthController {
       email,
     );
 
-    if (isUserExist) throw new BadRequestError("Email already existed.");
+    if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
 
     const user = await this.userService.createUser({ email, password });
     const data = this.authService.signToken(user);

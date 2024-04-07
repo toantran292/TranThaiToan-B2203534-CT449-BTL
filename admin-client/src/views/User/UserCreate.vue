@@ -1,3 +1,3 @@
 <template>
-  <div>UserView</div>
+  <div>Create</div>
 </template>

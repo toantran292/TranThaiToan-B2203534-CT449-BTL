@@ -1,14 +1,36 @@
-import { Controller, Delete, Get, Patch, Post, User } from "@decorators";
+import {
+  Controller,
+  Delete,
+  Dependencies,
+  Get,
+  Patch,
+  Post,
+  Req,
+  UploadFile,
+} from "@decorators";
 import jwtMiddleware from "@middleware/jwt.middleware";
 import permissionMiddleware from "@middleware/permission.middleware";
+import UserService from "@users/user.service";
+import { Request } from "express";
 
+@Dependencies(UserService)
 @Controller("/api/users", jwtMiddleware(), permissionMiddleware())
 class UserController {
-  constructor() {}
+  constructor(private userService: UserService) {}
   @Get()
-  getAll(@User() user) {
-    console.log(user);
-    return { user, url: process.env.MONGO_CONNECTION };
+  async getAll() {
+    const ans = await this.userService.getAllUser();
+    const result: any[] = [];
+    for (let i = 1; i <= 500; i++) result.push(ans[0]);
+    return result;
+  }
+
+  @Post("/upload")
+  @UploadFile("avatar")
+  uploadAvatar(@Req() req: Request) {
+    console.log(req.file);
+
+    return { avatar: req.file };
   }
 
   @Post()
