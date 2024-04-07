@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "NODE_ENV=developments npx tsx --watch src/server.ts",
     "build": "rimraf ./dist && tsc && tsc-alias",
-    "start": "NODE_ENV=prod node dist/server.js"
+    "start": "NODE_ENV=prod node dist/server.js",
+    "create-admin-user": "node dist/commands/createAdminUser.js",
+    "create-admin-user:dev": "tsx src/commands/createAdminUser.ts"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

@@ -22,15 +22,7 @@ class UserController {
     const ans = await this.userService.getAllUser();
     const result: any[] = [];
     for (let i = 1; i <= 500; i++) result.push(ans[0]);
-    return result;
-  }
-
-  @Post("/upload")
-  @UploadFile("avatar")
-  uploadAvatar(@Req() req: Request) {
-    console.log(req.file);
-
-    return { avatar: req.file };
+    return ans;
   }
 
   @Post()
@@ -46,6 +38,14 @@ class UserController {
   @Patch("/:id")
   update() {
     return "asdhasjkdhaskjd";
+  }
+
+  @Post("/:id/upload")
+  @UploadFile("avatar")
+  uploadAvatar(@Req() req: Request) {
+    console.log(req.file);
+
+    return { avatar: req.file };
   }
 
   @Delete("/:id")
