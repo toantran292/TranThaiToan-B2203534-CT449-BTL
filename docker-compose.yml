@@ -3,7 +3,7 @@ services:
     image: node:18
     container_name: admin_client
     environment:
-      - VITE_APP_ENDPOINT=http://192.168.101.10:3000
+      - VITE_APP_ENDPOINT=http://localhost:3000
     ports:
       - 3001:3001
     working_dir: /app

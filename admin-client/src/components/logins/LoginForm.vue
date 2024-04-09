@@ -40,8 +40,8 @@ import { reactive, ref } from 'vue'
 const loading = ref<boolean>(false)
 
 const formState = reactive<ILoginPayload>({
-  email: 'test@gmail.com',
-  password: '123456'
+  email: 'admin@gmail.com',
+  password: '12345678'
 })
 
 const handleSubmit = async () => {
@@ -49,7 +49,6 @@ const handleSubmit = async () => {
     const authStore = useAuthStore()
     loading.value = true
     await authStore.login(formState)
-
     notification.success({
       message: 'Đăng nhập thành công',
       description: 'Hệ thống đang chuyển hướng bạn đến trang quản trị!',

@@ -21,7 +21,9 @@ export const JWT_REFRESH_TOKEN =
 export const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
 export const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
-  : 12345;
+  : 3000;
+export const MEDIA_HOST =
+  process.env.MEDIA_HOST || `http://${SERVER_HOSTNAME}:${SERVER_PORT}`;
 
 export const mongo = {
   MONGO_USER,
@@ -37,6 +39,7 @@ export const mongo = {
 export const server = {
   SERVER_HOSTNAME,
   SERVER_PORT,
+  MEDIA_HOST,
 };
 
 export const jwtConfig = {

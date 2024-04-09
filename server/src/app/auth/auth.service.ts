@@ -34,10 +34,13 @@ class AuthService {
   }
 
   getUserData(user: IUserDocument) {
+    user = user.toJSON();
     return {
       userId: user.id,
       isStaff: user.isStaff,
       email: user.email,
+      firstName: user.firstName,
+      avatar: user.avatar,
     };
   }
 }

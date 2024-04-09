@@ -1,3 +1,4 @@
+import { getPathOfImage } from "@utils";
 import { compare, hash } from "bcrypt";
 import { Model, Schema, SchemaOptions, model } from "mongoose";
 import { IUserDocument } from "./user.interface";
@@ -7,7 +8,10 @@ const userOptions: SchemaOptions = {
   toJSON: {
     transform(_doc, ret) {
       delete ret.password;
-      return ret;
+      return {
+        ...ret,
+        avatar: getPathOfImage(ret.avatar),
+      };
     },
   },
 };
@@ -21,6 +25,7 @@ const userSchema: Schema = new Schema(
     gender: { type: String, default: "unknow" },
     phoneNumber: { type: String, default: "" },
     isStaff: { type: Boolean, default: false },
+    avatar: { type: String, default: "" },
 
     email: { type: String, required: true, unique: true, index: true },
     password: { type: String },

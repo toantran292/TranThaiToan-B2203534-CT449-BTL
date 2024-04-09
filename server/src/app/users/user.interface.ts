@@ -5,6 +5,7 @@ export interface IUserDocument extends Document {
   refreshToken: string;
   password: string;
   email: string;
+  avatar: string;
 
   address: string;
   firstName: string;
@@ -17,6 +18,6 @@ export interface IUserDocument extends Document {
   createdAt: Date;
   updatedAt: Date;
 
-  comparePassword(password: string): Promise<boolean>
-  hashPassword(password: string): Promise<string>
+  comparePassword(password: string): Promise<boolean>;
+  hashPassword(password: string): Promise<string>;
 }

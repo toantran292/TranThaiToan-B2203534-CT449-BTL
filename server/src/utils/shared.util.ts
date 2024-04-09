@@ -1,3 +1,4 @@
+import { server } from "@cofig/config";
 import fs from "fs";
 import path from "path";
 
@@ -22,4 +23,8 @@ export const getCurrentDateTime = () => {
 // Helper function to get the file extension
 export const getExtension = (filename) => {
   return path.extname(filename).slice(1).toLowerCase(); // Remove dot and convert to lowercase
+};
+
+export const getPathOfImage = (filename: string) => {
+  return `${server.MEDIA_HOST}/${filename}`;
 };
