@@ -1,10 +1,7 @@
 import { AuthRegisterDTO } from "@auth/dto";
-import { jwtConfig } from "@cofig/config";
 import { Injectable } from "@decorators";
 import { IUserDocument } from "@users/user.interface";
-import { Forbidden } from "@utils";
-
-import jwt from "jsonwebtoken";
+import { Forbidden, signJwtRfToken, signJwtToken } from "@utils";
 
 @Injectable()
 class AuthService {
@@ -23,12 +20,8 @@ class AuthService {
 
   signToken(user: IUserDocument) {
     const userData = this.getUserData(user);
-    const accessToken = jwt.sign(userData, jwtConfig.JWT_ACCESS_TOKEN!, {
-      expiresIn: "1h",
-    });
-    const refreshToken = jwt.sign(userData, jwtConfig.JWT_REFRESH_TOKEN!, {
-      expiresIn: "7d",
-    });
+    const accessToken = signJwtToken(userData);
+    const refreshToken = signJwtRfToken(userData);
 
     return { user: userData, token: { accessToken, refreshToken } };
   }
@@ -36,7 +29,7 @@ class AuthService {
   getUserData(user: IUserDocument) {
     user = user.toJSON();
     return {
-      userId: user.id,
+      userId: user._id,
       isStaff: user.isStaff,
       email: user.email,
       firstName: user.firstName,

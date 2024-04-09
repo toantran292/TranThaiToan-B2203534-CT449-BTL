@@ -104,8 +104,9 @@ class Factory {
 
           this.app[method.toLowerCase() as keyof Express](
             path,
+            [...middlewares],
             this.#upload.fields(opts),
-            [...middlewares, resolver],
+            [resolver],
           );
         } else {
           const { name, maxCount, strategy } = last(multerOptions) || {};
@@ -114,8 +115,9 @@ class Factory {
             case "SINGLE": {
               this.app[method.toLowerCase() as keyof Express](
                 path,
+                [...middlewares],
                 this.#upload.single(name),
-                [...middlewares, resolver],
+                [resolver],
               );
 
               break;
@@ -123,8 +125,9 @@ class Factory {
             case "ARRAY": {
               this.app[method.toLowerCase() as keyof Express](
                 path,
+                [...middlewares],
                 this.#upload.array(name, maxCount),
-                [...middlewares, resolver],
+                [resolver],
               );
 
               break;
@@ -132,8 +135,9 @@ class Factory {
             default: {
               this.app[method.toLowerCase() as keyof Express](
                 path,
+                [...middlewares],
                 this.#upload.fields([{ name, maxCount }]),
-                [...middlewares, resolver],
+                [resolver],
               );
 
               break;

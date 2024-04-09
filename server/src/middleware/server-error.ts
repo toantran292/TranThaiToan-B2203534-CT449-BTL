@@ -1,6 +1,7 @@
 import logger from "@cofig/logger";
 import { CustomError } from "@utils";
 import { NextFunction, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import multer from "multer";
 
 const ServerError =
@@ -8,6 +9,7 @@ const ServerError =
     let message = "";
     if (err instanceof CustomError)
       return res.status(err.statusCode).json(err.serializeErrors());
+
     if (err instanceof multer.MulterError) {
       if (err.code === "LIMIT_UNEXPECTED_FILE")
         message = `${err.field} gửi tối đa chỉ được một file ảnh`;
@@ -16,6 +18,22 @@ const ServerError =
         statusCode: 400,
         status: "limit_exceed",
         message,
+      });
+    }
+
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        statusCode: 401,
+        status: "token_expired",
+        message: "",
+      });
+    }
+
+    if (err instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        statusCode: 401,
+        status: "invalid_token",
+        message: "",
       });
     }
 

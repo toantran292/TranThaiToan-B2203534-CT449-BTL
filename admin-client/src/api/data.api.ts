@@ -17,11 +17,11 @@ export interface ICreatePayload<T = any> extends IGetPayload {
 }
 
 export const getAll = <T = any>({ source }: IGetPayload) => {
-  return api.get(`${baseUrl}/${source}`) as any as Promise<T[]>
+  return (api.get(`${baseUrl}/${source}`) as any as Promise<T[]>) || []
 }
 
 export const getOne = <T = any>({ source, id }: IGetOnePayload) => {
-  return api.get(`${baseUrl}/${source}/${id}`) as Promise<T>
+  return (api.get(`${baseUrl}/${source}/${id}`) as Promise<T>) || {}
 }
 
 export const updateOne = <T = any>({ source, id, data }: IUpdatePayload<T>) => {

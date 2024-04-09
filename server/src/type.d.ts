@@ -5,6 +5,7 @@ declare global {
     interface Request<T = any> {
       data: T;
       user?: AuthPayload;
+      _user?: AuthPayload;
     }
   }
 }

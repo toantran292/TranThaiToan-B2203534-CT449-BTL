@@ -1,11 +1,20 @@
 import AuthService from "@auth/auth.service";
 import { AuthLogInDTO, AuthRegisterDTO } from "@auth/dto";
-import { Body, Controller, Dependencies, Middlewares, Post } from "@decorators";
+import { AuthPayload } from "@auth/interfaces/auth.interface";
+import {
+  Body,
+  Controller,
+  Dependencies,
+  Middlewares,
+  Post,
+  Req,
+} from "@decorators";
+import jwtMiddleware, { TYPE_JWT } from "@middleware/jwt.middleware";
 import validateBody from "@middleware/validate";
 import { IUserDocument } from "@users/user.interface";
 import UserSerivce from "@users/user.service";
-import { BadRequestError } from "@utils";
-
+import { BadRequestError, verifyJwtRfToken } from "@utils";
+import { Request } from "express";
 @Dependencies(AuthService, UserSerivce)
 @Controller("/auth")
 class AuthController {
@@ -35,6 +44,16 @@ class AuthController {
       body.email,
     );
     return this.authService.login(body, existingUser);
+  }
+
+  @Post("/token")
+  @Middlewares(jwtMiddleware(TYPE_JWT.CHECK))
+  refreshToken(
+    @Body("refreshToken") rfToken: string,
+    @Req<Request>("_user") _user: AuthPayload,
+  ) {
+    const token = verifyJwtRfToken(rfToken, _user);
+    return { token };
   }
 }
 

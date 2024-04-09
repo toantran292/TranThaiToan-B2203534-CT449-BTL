@@ -63,8 +63,13 @@ export function mappingParamDecorator<T>({
   property?: keyof T;
 }): ParameterDecorator {
   return (target: any, propertyKey, parameterIndex) => {
-    const args = Reflect.getMetadata(PARAMTYPES_METADATA, target[propertyKey!]) || [];
-    Reflect.defineMetadata(PARAMTYPES_METADATA, [...args, { type, property, parameterIndex }], target[propertyKey!]);
+    const args =
+      Reflect.getMetadata(PARAMTYPES_METADATA, target[propertyKey!]) || [];
+    Reflect.defineMetadata(
+      PARAMTYPES_METADATA,
+      [...args, { type, property, parameterIndex }],
+      target[propertyKey!],
+    );
   };
 }
 
@@ -90,11 +95,14 @@ export const mappingModuleDecorator =
 
       const prefix = Reflect.getMetadata(CONTROLLER_PREFIX, controller) || "/";
       // console.log(`${prefix}`);
-      const controllerMiddlewares = Reflect.getMetadata(CONTROLLER_MIDDLEWARES, controller) || [];
+      const controllerMiddlewares =
+        Reflect.getMetadata(CONTROLLER_MIDDLEWARES, controller) || [];
 
       const dependencies = Reflect.getMetadata(DEPENDENCIES, controller) || [];
 
-      const dependenciesMapped = dependencies.map((dependency: any) => new dependency());
+      const dependenciesMapped = dependencies.map(
+        (dependency: any) => new dependency(),
+      );
 
       const self = controller.prototype;
 
@@ -110,36 +118,71 @@ export const mappingModuleDecorator =
 
           const path = Reflect.getMetadata(REQUEST_PATH, controllerTarget);
 
-          const multerOptions = Reflect.getMetadata(MULTER_OPTIONS, controllerTarget) || [];
+          const multerOptions =
+            Reflect.getMetadata(MULTER_OPTIONS, controllerTarget) || [];
 
-          const middlewares = Reflect.getMetadata(MIDDLEWARES, controllerTarget) || [];
+          const middlewares =
+            Reflect.getMetadata(MIDDLEWARES, controllerTarget) || [];
           // console.log(prefix, path, controllerTarget);
           if (method && path) {
             const realPath = compact(path.split("/")).join("/");
 
-            const urlRedirect = Reflect.getMetadata(URL_REDIRECT, controllerTarget);
+            const urlRedirect = Reflect.getMetadata(
+              URL_REDIRECT,
+              controllerTarget,
+            );
 
             const header = Reflect.getMetadata(HEADER, controllerTarget);
 
-            const status = Reflect.getMetadata(STATUS_CODE, controllerTarget) || 200;
+            const status =
+              Reflect.getMetadata(STATUS_CODE, controllerTarget) || 200;
 
-            const interceptors = Reflect.getMetadata(INTERCEPTOR, controllerTarget);
+            const interceptors = Reflect.getMetadata(
+              INTERCEPTOR,
+              controllerTarget,
+            );
 
-            const params: IParam[] = Reflect.getMetadata(PARAMTYPES_METADATA, controllerTarget) || [];
-            const resolver = (req: Request, res: Response, next: NextFunction) => {
-              const args: any[] = [];
-              params
+            const params: IParam[] =
+              Reflect.getMetadata(PARAMTYPES_METADATA, controllerTarget) || [];
+            const resolver = (
+              req: Request,
+              res: Response,
+              next: NextFunction,
+            ) => {
+              // const args: any[] = [];
+              // params
+              //   .sort((a, b) => a.parameterIndex - b.parameterIndex)
+              //   .forEach((param) => {
+              //     if (param.type)
+              //       if (param.type === ParameterType.REQUEST) args.push(req);
+              //       else if (param.type === ParameterType.RESPONSE)
+              //         args.push(res);
+              //       else if (param.type === ParameterType.NEXT) args.push(next);
+              //       else {
+              //         let type = req[param.type];
+              //         if (!isEmpty(param.property)) type = type[param.property];
+              //         args.push(type);
+              //       }
+              //   });
+
+              const args: any = params
                 .sort((a, b) => a.parameterIndex - b.parameterIndex)
-                .forEach((param) => {
-                  if (param.type === ParameterType.REQUEST) args.push(req);
-                  else if (param.type === ParameterType.RESPONSE) args.push(res);
-                  else if (param.type === ParameterType.NEXT) args.push(next);
-                  else {
-                    let type = req[param.type];
-                    if (!isEmpty(param.property)) type = type[param.property];
-                    args.push(type);
-                  }
-                });
+                .reduce((acc: any, param) => {
+                  if (param.type === ParameterType.RESPONSE)
+                    return [...acc, res];
+
+                  if (param.type === ParameterType.NEXT) return [...acc, next];
+
+                  let curr: any = req;
+
+                  if (param.type !== ParameterType.REQUEST)
+                    curr = curr[param.type];
+
+                  if (!isEmpty(param.property))
+                    return [...acc, curr[param.property]];
+
+                  return [...acc, curr];
+                }, []);
               return Promise.resolve(controllerTarget.bind(instance)(...args))
                 .then((result) => {
                   if (isEqual(result, res)) {
@@ -166,7 +209,9 @@ export const mappingModuleDecorator =
                       }),
                     )
                       .then((nestedResults) => {
-                        return handleMappingResolver(last(nestedResults) || result);
+                        return handleMappingResolver(
+                          last(nestedResults) || result,
+                        );
                       })
                       .catch((error) => {
                         throw error;

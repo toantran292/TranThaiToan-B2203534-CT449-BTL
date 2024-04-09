@@ -24,6 +24,4 @@
 
 <script setup lang="ts">
 defineProps(['title'])
-
-console.log('nani')
 </script>

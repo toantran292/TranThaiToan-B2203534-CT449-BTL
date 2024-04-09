@@ -6,10 +6,12 @@ import {
   Patch,
   Post,
 } from "@decorators";
+import jwtMiddleware from "@middleware/jwt.middleware";
+import permissionMiddleware from "@middleware/permission.middleware";
 import UserService from "@users/user.service";
 
 @Dependencies(UserService)
-@Controller("/api/users")
+@Controller("/api/users", jwtMiddleware(), permissionMiddleware())
 class UserController {
   constructor(private userService: UserService) {}
   @Get()

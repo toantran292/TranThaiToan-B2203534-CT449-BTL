@@ -32,7 +32,6 @@
 import { useAuthStore } from '@/stores'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { faBook, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { notification } from 'ant-design-vue'
 
 const collapsed = defineModel('collapsed')
 const selectedKeys = defineModel('selectedKeys')
@@ -40,8 +39,7 @@ const selectedKeys = defineModel('selectedKeys')
 const handleLogin = () => {
   const auth = useAuthStore()
 
-  auth.logout()
-  notification.success({
+  auth.logout('success', {
     message: 'Đăng xuất thành công'
   })
 }

@@ -1,5 +1,6 @@
 import { refreshToken } from '@/api/auth.api'
 import { __ACCESS_TOKEN__ } from '@/constants/localStorage'
+import { useAuthStore } from '@/stores'
 import axios from 'axios'
 
 const api = axios.create({
@@ -32,23 +33,31 @@ api.interceptors.response.use(
     return response.data
   },
   async (error) => {
-    // console.log(error)
-
     if (error.response) {
-      if (error.response.status === 401 && error.response.data.status === 'token_expired') {
+      if (error.response.status !== 401) return Promise.reject(error.response.data)
+
+      //STATUS == 401
+      if (error.response.data.status === 'token_expired') {
         if (!isRefreshing) {
+          isRefreshing = true
           try {
-            const { data } = await refreshToken()
+            const data: any = await refreshToken()
             localStorage.setItem(__ACCESS_TOKEN__, data.token)
             refreshQueue.forEach((resolve) => resolve())
             refreshQueue = []
             isRefreshing = false
 
             error.config.headers.Authorization = `Bearer ${data.token}`
-            return axios.request(error.config)
+            return api.request(error.config)
           } catch (error) {
+            refreshQueue = []
             isRefreshing = false
-            console.error('Failed to refresh token', error)
+            const auth = useAuthStore()
+            auth.logout('error', {
+              message: 'Phiên đã hết hạn',
+              description: 'Vui lòng đăng nhập lại!',
+              duration: 2.5
+            })
           }
         } else {
           return new Promise((resolve) => {
@@ -58,8 +67,6 @@ api.interceptors.response.use(
           })
         }
       }
-
-      return Promise.reject(error.response.data)
     }
 
     return Promise.reject('Lỗi')

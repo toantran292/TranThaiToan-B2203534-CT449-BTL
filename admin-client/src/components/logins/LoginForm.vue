@@ -33,7 +33,6 @@
 import type { ILoginPayload } from '@/interfaces'
 import { useAuthStore } from '@/stores'
 import { LockOutlined, UserOutlined } from '@ant-design/icons-vue'
-import { notification } from 'ant-design-vue'
 import { reactive, ref } from 'vue'
 
 // State
@@ -49,20 +48,11 @@ const handleSubmit = async () => {
     const authStore = useAuthStore()
     loading.value = true
     await authStore.login(formState)
-    notification.success({
-      message: 'Đăng nhập thành công',
-      description: 'Hệ thống đang chuyển hướng bạn đến trang quản trị!',
-      duration: 2.5
-    })
+
     loading.value = false
   } catch (error: any) {
     loading.value = false
     console.log(error)
-    notification.error({
-      message: 'Đăng nhập thất bại',
-      description: error.message,
-      duration: 2.5
-    })
   }
 }
 </script>

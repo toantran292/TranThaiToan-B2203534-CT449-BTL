@@ -3,6 +3,8 @@ import { __ACCESS_TOKEN__, __REFRESH_TOKEN__, __USER__ } from '@/constants/local
 import type { ILoginPayload } from '@/interfaces'
 import router from '@/router'
 import { sleep } from '@/utils/helper.util'
+import { notification } from 'ant-design-vue'
+import type { NotificationArgsProps, NotificationInstance } from 'ant-design-vue/es/notification'
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore({
@@ -23,15 +25,27 @@ export const useAuthStore = defineStore({
         localStorage.setItem(__ACCESS_TOKEN__, token.accessToken)
         localStorage.setItem(__REFRESH_TOKEN__, token.refreshToken)
 
+        notification.success({
+          message: 'Đăng nhập thành công',
+          description: 'Hệ thống đang chuyển hướng bạn đến trang quản trị!',
+          duration: 2.5
+        })
+
         router.push(this.returnUrl || '/')
-      } catch (error) {
+      } catch (error: any) {
+        notification.error({
+          message: 'Đăng nhập thất bại',
+          description: error.message,
+          duration: 2.5
+        })
         return Promise.reject(error)
       }
     },
-    logout() {
+    logout(type: keyof NotificationInstance, opts: NotificationArgsProps) {
       this.user = null
       localStorage.removeItem(__USER__)
       router.push('/login')
+      notification[type](opts)
     }
   }
 })
