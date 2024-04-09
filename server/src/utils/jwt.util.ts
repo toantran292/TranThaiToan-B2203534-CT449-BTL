@@ -9,7 +9,7 @@ export const decodeJwtToken = (data: any) => {
 
 export const signJwtToken = (data: any) => {
   return jwt.sign(data, JWT_ACCESS_TOKEN, {
-    expiresIn: "5s",
+    expiresIn: "30d",
   });
 };
 
