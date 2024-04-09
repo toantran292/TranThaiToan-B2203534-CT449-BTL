@@ -7,10 +7,11 @@ import NotFoundError from "@middleware/not-found-error";
 import ServerError from "@middleware/server-error";
 import AppModule from "@root/app.module";
 import Factory from "@root/library/factory";
-import { getCurrentDateTime, getDirectory, getExtension } from "@utils";
+import { ImageFileError, getDirectory, getExtension } from "@utils";
 import cors from "cors";
 import { json, urlencoded } from "express";
 
+import crypto from "crypto";
 import mongoose from "mongoose";
 import multer from "multer";
 import path, { resolve } from "path";
@@ -43,10 +44,10 @@ export const bootstrap = async () => {
       cb(null, uploadFolder);
     },
     filename: function (req, file, cb) {
-      console.log(file);
-      const filename = `${getCurrentDateTime()}.${getExtension(
-        file.originalname,
-      )}`;
+      // console.log(file);
+      const filename = `${crypto
+        .randomBytes(20)
+        .toString("hex")}.${getExtension(file.originalname)}`;
       cb(null, filename);
     },
   });
@@ -61,6 +62,16 @@ export const bootstrap = async () => {
     .create(AppModule, {
       multer: {
         storage,
+        fileFilter: (req, file, cb) => {
+          if (file.mimetype.startsWith("image/")) {
+            cb(null, true); // Accept the file
+          } else {
+            cb(
+              new ImageFileError("Chỉ cho phép tải lên file hình ảnh") as any,
+              false,
+            ); // Reject the file
+          }
+        },
       },
     });
 

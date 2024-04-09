@@ -62,3 +62,11 @@ export class ClassValidateError extends CustomError {
     // this.errors = errors;
   }
 }
+
+export class ImageFileError extends CustomError {
+  statusCode: number = HTTP_STATUS.BAD_REQUEST;
+  status: string = "invalid_filetype";
+  constructor(message: string) {
+    super(message);
+  }
+}
