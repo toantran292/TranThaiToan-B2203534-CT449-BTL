@@ -7,21 +7,24 @@
         backgroundColor: '#fff'
       }"
     >
-      <user-form @submit="onSubmit" @changeImg="handleChangeImg" password />
+      <user-form :avatar :_id @submit="onSubmit" :dirty="meta.dirty" @changeImg="handleChangeImg" />
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
-import { create } from '@/api/data.api'
+import { getOne, updateOne } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import UserForm from '@/components/users/UserForm.vue'
+import type { IUser } from '@/interfaces/user.interface'
 import { toTypedSchema } from '@vee-validate/zod'
 import { notification } from 'ant-design-vue'
 import { useForm } from 'vee-validate'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import * as zod from 'zod'
 
-const { setFieldValue, handleSubmit } = useForm({
+const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
@@ -33,7 +36,6 @@ const { setFieldValue, handleSubmit } = useForm({
       address: zod.string().optional(),
       isStaff: zod.boolean(),
       gender: zod.string(),
-      password: zod.string(),
       birthDay: zod
         .string()
         .min(1)
@@ -48,27 +50,25 @@ const { setFieldValue, handleSubmit } = useForm({
           }
         )
     })
-  ),
-  initialValues: {
-    gender: 'unknow',
-    password: '',
-    birthDay: new Date().toISOString(),
-    isStaff: false,
-    avatar: ''
-  }
+  )
 })
+const route = useRoute()
 
 const onSubmit = handleSubmit(
   async (values: any) => {
     try {
-      await create({ source: 'users', data: values })
+      const regex = /\/[^/]+\/(.+)$/
+      const result = values.avatar.match(regex)
+      if (result) values.avatar = result[1]
+      console.log(values)
+      await updateOne({ source: 'users', id: route.params.id as string, data: values })
       notification.success({
-        message: 'Tạo người dùng thành công',
+        message: 'Chỉnh sửa người dùng thành công',
         duration: 2.5
       })
     } catch (error: any) {
       notification.error({
-        message: 'Tạo người dùng thất bại',
+        message: 'Chỉnh sửa người dùng thất bại',
         description: error.message,
         duration: 2.5
       })
@@ -79,7 +79,19 @@ const onSubmit = handleSubmit(
   }
 )
 
+const [avatar] = defineField('avatar')
+const [_id] = defineField('_id')
+
 const handleChangeImg = (url: string) => {
   setFieldValue('avatar', url)
 }
+
+onMounted(async () => {
+  try {
+    const data = await getOne<IUser>({ source: 'users', id: route.params.id as string })
+    resetForm({ values: data })
+  } catch (error) {
+    console.log(error)
+  }
+})
 </script>

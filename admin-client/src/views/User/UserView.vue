@@ -31,6 +31,15 @@
                 showTotal: (total: number, range: number[]) =>
                   `${range[0]}-${range[1]} of ${total} items`
               }"
+              :customRow="
+                (record: IUser, index: any) => {
+                  return {
+                    onClick: () => {
+                      router.push(`users/${record._id}`)
+                    }
+                  }
+                }
+              "
             />
           </div>
         </a-layout>
@@ -42,6 +51,7 @@
 import { getAll } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import type { IUser } from '@/interfaces/user.interface'
+import router from '@/router'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
 

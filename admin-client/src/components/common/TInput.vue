@@ -19,11 +19,15 @@
       />
       <a-date-picker
         v-else-if="datePicker"
+        :lowerLimit="new Date()"
+        :locale="locale"
         :status="inputStatus"
         :id="name"
         :name
         :style="{ width: '100%' }"
         v-model:value="value"
+        :valueFormat="'YYYY-MM-DDTHH:mm:ssZ'"
+        :format="'DD/MM/YYYY'"
       />
       <a-switch v-else-if="isSwitch" v-model:checked="value" />
       <a-select v-else-if="select" v-model:value="value" :style="{ width: '100%' }">
@@ -34,12 +38,14 @@
   </a-row>
   <a-row>
     <a-col :span="24" :style="{ height: '1.2rem', marginTop: '5px' }">
-      <div :style="{ color: 'red' }">{{ error }}</div>
+      <div :style="{ color: 'red' }">{{ errorMessage }}</div>
     </a-col>
   </a-row>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import locale from 'ant-design-vue/es/date-picker/locale/vi_VN'
+import { useField } from 'vee-validate'
 import { computed } from 'vue'
 
 const props = defineProps({
@@ -50,16 +56,9 @@ const props = defineProps({
   datePicker: Boolean,
   password: Boolean,
   isSwitch: Boolean,
-  select: Boolean,
-  error: {
-    type: String,
-    default: ''
-  }
+  select: Boolean
 })
-const value = defineModel('value')
-// console.log(value)
 
-const inputStatus = computed(() => (props.error ? 'error' : ''))
-
-// console.log(props.inputSpan)
+const inputStatus = computed(() => (errorMessage ? true : false))
+const { value, errorMessage } = useField(() => props.name!)
 </script>

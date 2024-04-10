@@ -4,7 +4,7 @@
       <div>
         <div class="logo" />
         <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="users">
+          <a-menu-item key="users">
             <router-link :to="{ name: 'user' }"> </router-link>
             <user-outlined />
             <span>Quản lý người dùng</span>

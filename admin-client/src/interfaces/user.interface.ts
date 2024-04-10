@@ -1,15 +1,17 @@
 export interface IUser {
-  _id: string
-  email: string
-
-  address: string
   firstName: string
   lastName: string
+  birthDay: any
+  address: string
   gender: '0' | '1' | 'unknow'
   phoneNumber: string
   isStaff: boolean
-  birthday: Date
+  avatar: string
+  email: string
+  password?: string
 
-  createdAt: Date
-  updatedAt: Date
+  __v?: number
+  _id?: string
+  createdAt?: any
+  updatedAt?: any
 }

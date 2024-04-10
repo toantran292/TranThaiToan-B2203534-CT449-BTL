@@ -4,6 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
+import UserEdit from '@/views/User/UserEdit.vue'
 import UserView from '@/views/User/UserView.vue'
 import { notification } from 'ant-design-vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -33,6 +34,11 @@ const router = createRouter({
           path: 'users/create',
           name: 'user:create',
           component: UserCreate
+        },
+        {
+          path: 'users/:id',
+          name: 'user:edit',
+          component: UserEdit
         },
         {
           path: 'books',

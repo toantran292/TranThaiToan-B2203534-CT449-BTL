@@ -25,15 +25,11 @@ export const getOne = <T = any>({ source, id }: IGetOnePayload) => {
 }
 
 export const updateOne = <T = any>({ source, id, data }: IUpdatePayload<T>) => {
-  return api.patch(`${baseUrl}/${source}/${id}`, {
-    data
-  })
+  return api.patch(`${baseUrl}/${source}/${id}`, data)
 }
 
 export const create = <T = any>({ source, data }: ICreatePayload<T>) => {
-  return api.patch(`${baseUrl}/${source}`, {
-    data
-  })
+  return api.post(`${baseUrl}/${source}`, data)
 }
 
 export const uploadImage = (source: string, img: any) => {
