@@ -1,6 +1,6 @@
 <template>
-  <a-row :gutter="10">
-    <a-col :span="labelSpan">
+  <a-row :gutter="[10, 5]">
+    <a-col :span="24">
       <a-flex :style="{ height: '100%' }" align="center">
         <label :for="name">
           <a-flex gap="3">
@@ -9,27 +9,31 @@
         </label>
       </a-flex>
     </a-col>
-    <a-col :span="inputSpan">
+    <a-col :span="24">
+      <a-input-password
+        v-if="password"
+        :status="inputStatus"
+        :id="name"
+        :name
+        v-model:value="value"
+      />
       <a-date-picker
-        v-if="datePicker"
+        v-else-if="datePicker"
         :status="inputStatus"
         :id="name"
         :name
         :style="{ width: '100%' }"
         v-model:value="value"
       />
-      <a-input-password
-        v-else-if="password"
-        :status="inputStatus"
-        :id="name"
-        :name
-        v-model:value="value"
-      />
+      <a-switch v-else-if="isSwitch" v-model:checked="value" />
+      <a-select v-else-if="select" v-model:value="value" :style="{ width: '100%' }">
+        <slot />
+      </a-select>
       <a-input v-else :status="inputStatus" :id="name" :name v-model:value="value" :placeholder />
     </a-col>
   </a-row>
   <a-row>
-    <a-col :offset="labelSpan" :span="inputSpan" :style="{ height: '1.2rem' }">
+    <a-col :span="24" :style="{ height: '1.2rem', marginTop: '5px' }">
       <div :style="{ color: 'red' }">{{ error }}</div>
     </a-col>
   </a-row>
@@ -45,20 +49,11 @@ const props = defineProps({
   required: Boolean,
   datePicker: Boolean,
   password: Boolean,
+  isSwitch: Boolean,
+  select: Boolean,
   error: {
     type: String,
     default: ''
-  },
-  labelSpan: {
-    type: Number,
-    default: 4
-  },
-  inputSpan: {
-    type: Number,
-    default(toRaw) {
-      // console.log(toRaw)
-      return 24 - toRaw.labelSpan
-    }
   }
 })
 const value = defineModel('value')
