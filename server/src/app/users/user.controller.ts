@@ -1,13 +1,18 @@
 import {
+  Body,
   Controller,
   Delete,
   Dependencies,
   Get,
+  Middlewares,
+  Param,
   Patch,
   Post,
 } from "@decorators";
 import jwtMiddleware from "@middleware/jwt.middleware";
 import permissionMiddleware from "@middleware/permission.middleware";
+import validateBody from "@middleware/validate";
+import { CreateUserDTO, UpdateUserDTO } from "@users/dto";
 import UserService from "@users/user.service";
 
 @Dependencies(UserService)
@@ -23,18 +28,20 @@ class UserController {
   }
 
   @Post()
-  create() {
-    return {};
+  @Middlewares(validateBody(CreateUserDTO))
+  create(@Body() body: CreateUserDTO) {
+    return this.userService.createUser(body);
   }
 
   @Get("/:id")
-  getOne(): string {
-    return "id";
+  getOne(@Param("id") id: string) {
+    return this.userService.getUserById(id);
   }
 
   @Patch("/:id")
-  update() {
-    return "asdhasjkdhaskjd";
+  @Middlewares(validateBody(UpdateUserDTO))
+  update(@Body() body: UpdateUserDTO, @Param("id") id: string) {
+    return this.userService.updateUserById(body, id);
   }
 
   @Delete("/:id")

@@ -1,7 +1,9 @@
 import logger from "@cofig/logger";
+import { viLang } from "@root/constant";
 import { CustomError } from "@utils";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { mongo } from "mongoose";
 import multer from "multer";
 
 const ServerError =
@@ -37,6 +39,21 @@ const ServerError =
       });
     }
 
+    if (err instanceof mongo.MongoServerError) {
+      if (err.code === 11000) {
+        const keyPattern = /{\s*([^:]+?):\s*/;
+        const match = keyPattern.exec(err.message);
+        console.log(match);
+        const duplicateKeyField = match ? match[1] : "unknown";
+        message = `${viLang[duplicateKeyField]} đã tồn tại`;
+      }
+      console.log(err.message);
+      return res.status(400).json({
+        statusCode: 400,
+        status: "duplicate_data",
+        message,
+      });
+    }
     logger.debug("ServerError");
 
     if (Array.isArray(err.error)) {

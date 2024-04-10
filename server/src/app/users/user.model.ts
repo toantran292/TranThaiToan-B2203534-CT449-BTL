@@ -10,7 +10,7 @@ const userOptions: SchemaOptions = {
       delete ret.password;
       return {
         ...ret,
-        avatar: getPathOfImage(ret.avatar),
+        avatar: ret.avatar ? getPathOfImage(ret.avatar) : "",
       };
     },
   },
@@ -23,7 +23,7 @@ const userSchema: Schema = new Schema(
     birthDay: { type: Date, default: () => Date.now() },
     address: { type: String, default: "" },
     gender: { type: String, default: "unknow" },
-    phoneNumber: { type: String, default: "" },
+    phoneNumber: { type: String, required: true, unique: true, index: true },
     isStaff: { type: Boolean, default: false },
     avatar: { type: String, default: "" },
 

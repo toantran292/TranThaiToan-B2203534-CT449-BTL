@@ -24,24 +24,27 @@ export const createAdminUser = async () => {
     // Prompt user for input
     rl.question("Nhập email: ", async (email) => {
       rl.question("Nhập mật khẩu: ", async (password) => {
-        rl.question("Nhập tên: ", async (firstName) => {
-          rl.question("Nhập họ: ", async (lastName) => {
-            // Hash admin password
+        rl.question("Nhập họ: ", async (firstName) => {
+          rl.question("Nhập tên: ", async (lastName) => {
+            rl.question("Nhập SĐT: ", async (phoneNumber) => {
+              // Hash admin password
 
-            // Create admin user
-            const adminUser = new UserModel({
-              email,
-              password,
-              firstName,
-              lastName,
-              isStaff: true,
+              // Create admin user
+              const adminUser = new UserModel({
+                email,
+                password,
+                firstName,
+                lastName,
+                phoneNumber,
+                isStaff: true,
+              });
+              // Save admin user to database
+              await adminUser.save();
+
+              console.log("Tạo tài khoản admin thành công.");
+              rl.close();
+              db.close();
             });
-            // Save admin user to database
-            await adminUser.save();
-
-            console.log("Tạo tài khoản admin thành công.");
-            rl.close();
-            db.close();
           });
         });
       });

@@ -32,9 +32,10 @@ class AuthController {
 
     if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
 
-    const user = await this.userService.createUser({ email, password });
-    const data = this.authService.signToken(user);
-    return data;
+    return {};
+    // const user = await this.userService.createUser({ email, password });
+    // const data = this.authService.signToken(user);
+    // return data;
   }
 
   @Post("/login")

@@ -1,23 +1,28 @@
 import { Injectable } from "@decorators";
+import { CreateUserDTO, UpdateUserDTO } from "@users/dto";
 import { IUserDocument } from "./user.interface";
 import { UserModel } from "./user.model";
 
 @Injectable()
 class UserService {
-  public async getAllUser() {
+  getAllUser() {
     return UserModel.find();
   }
-  public async getUserByEmail(email: string): Promise<IUserDocument> {
+  async getUserByEmail(email: string): Promise<IUserDocument> {
     return (await UserModel.findOne({ email: email }).exec()) as IUserDocument;
   }
-  public async createUser({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) {
-    const newUser = new UserModel({ email, password });
+  getUserById(id: string) {
+    return UserModel.findById(id);
+  }
+  updateUserById(data: UpdateUserDTO, id: string) {
+    const filter = { _id: id };
+    const updateOperation = { $set: data };
+    const updateOptions = { new: true };
+    return UserModel.findOneAndUpdate(filter, updateOperation, updateOptions);
+  }
+
+  async createUser(data: CreateUserDTO) {
+    const newUser = new UserModel(data);
     await newUser.save();
     return newUser;
   }
