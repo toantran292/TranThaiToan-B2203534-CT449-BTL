@@ -15,9 +15,7 @@
         </router-link>
       </template>
     </app-filter>
-    <a-layout-content
-      :style="{ margin: '0px 16px 24px 16px', padding: '12px', backgroundColor: '#fff' }"
-    >
+    <a-layout-content :style="{ margin: '0px 16px 24px 16px', backgroundColor: '#fff' }">
       <template v-if="users.length === 0">
         <a-empty />
       </template>

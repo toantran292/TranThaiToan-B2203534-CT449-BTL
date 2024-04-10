@@ -35,3 +35,13 @@ export const create = <T = any>({ source, data }: ICreatePayload<T>) => {
     data
   })
 }
+
+export const uploadImage = (source: string, img: any) => {
+  const formData = new FormData()
+  formData.append(source, img)
+  return api.post(`api/photos/${source}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
