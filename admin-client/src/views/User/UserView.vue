@@ -40,7 +40,18 @@
                   }
                 }
               "
-            />
+            >
+              <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'gender'">
+                  {{ TitleGender[record.gender] }}
+                </template>
+                <template v-else-if="column.key === 'isStaff'">
+                  <a-tag :color="record.isStaff ? '#87d068' : '#108ee9'">
+                    {{ record.isStaff ? 'Nhân viên' : 'Khách' }}
+                  </a-tag>
+                </template>
+              </template>
+            </a-table>
           </div>
         </a-layout>
       </template>
@@ -55,9 +66,21 @@ import router from '@/router'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
 
+const TitleGender: Record<string, string> = {
+  unknow: '',
+  '0': 'Nam',
+  '1': 'Nữ'
+}
+
 const columns = [
   {
-    name: 'Tên',
+    title: 'Họ',
+    dataIndex: 'lastName',
+    key: 'lastName',
+    width: 150
+  },
+  {
+    title: 'Tên',
     dataIndex: 'firstName',
     key: 'firstName',
     width: 150
@@ -78,8 +101,9 @@ const columns = [
     key: 'gender'
   },
   {
-    title: 'Action',
-    key: 'action'
+    title: 'Loại tài khoản',
+    dataIndex: 'isStaff',
+    key: 'isStaff'
   }
 ]
 
