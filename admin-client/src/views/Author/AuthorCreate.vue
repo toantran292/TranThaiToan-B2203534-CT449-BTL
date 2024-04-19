@@ -1,32 +1,27 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Sửa người dùng'" :hasToolBox="false" />
+    <app-filter :title="'Tạo người dùng'" :hasToolBox="false" />
     <a-layout-content
       :style="{
         margin: '0px 16px 24px 16px',
         backgroundColor: '#fff'
       }"
     >
-      <user-form :avatar :_id @submit="onSubmit" :dirty="meta.dirty" @changeImg="handleChangeImg" />
+      <user-form @submit="onSubmit" @changeImg="handleChangeImg" password />
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
-import { getOne, updateOne } from '@/api/data.api'
+import { create } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import UserForm from '@/components/users/UserForm.vue'
-import type { IUser } from '@/interfaces/user.interface'
-import router from '@/router'
-// import router from '@/router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { notification } from 'ant-design-vue'
 import { useForm } from 'vee-validate'
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import * as zod from 'zod'
 
-const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
+const { setFieldValue, handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
@@ -38,6 +33,7 @@ const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
       address: zod.string().optional(),
       isStaff: zod.boolean(),
       gender: zod.string(),
+      password: zod.string(),
       birthDay: zod
         .string()
         .min(1)
@@ -52,26 +48,27 @@ const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
           }
         )
     })
-  )
+  ),
+  initialValues: {
+    gender: 'unknow',
+    password: '',
+    birthDay: new Date().toISOString(),
+    isStaff: false,
+    avatar: ''
+  }
 })
-
-const route = useRoute()
 
 const onSubmit = handleSubmit(
   async (values: any) => {
     try {
-      const regex = /\/[^/]+\/(.+)$/
-      const result = values.avatar.match(regex)
-      if (result) values.avatar = result[1]
-      console.log(values)
-      await updateOne({ source: 'users', id: route.params.id as string, data: values })
+      await create({ source: 'users', data: values })
       notification.success({
-        message: 'Chỉnh sửa người dùng thành công',
+        message: 'Tạo người dùng thành công',
         duration: 2.5
       })
     } catch (error: any) {
       notification.error({
-        message: 'Chỉnh sửa người dùng thất bại',
+        message: 'Tạo người dùng thất bại',
         description: error.message,
         duration: 2.5
       })
@@ -82,30 +79,7 @@ const onSubmit = handleSubmit(
   }
 )
 
-const [avatar] = defineField('avatar')
-const [_id] = defineField('_id')
-
 const handleChangeImg = (url: string) => {
   setFieldValue('avatar', url)
 }
-
-onMounted(async () => {
-  try {
-    const data = await getOne<IUser>({ source: 'users', id: route.params.id as string })
-    resetForm({ values: data })
-  } catch (error: any) {
-    console.log(error)
-    if (error.status === 'not_found') {
-      notification.error({
-        message: 'Không tìm thấy người dùng',
-        duration: 2.5
-      })
-      // await sleep(500)
-      console.log(route)
-      router.push({ name: 'user' })
-      // console.log(router.)
-      // route.replace()
-    }
-  }
-})
 </script>

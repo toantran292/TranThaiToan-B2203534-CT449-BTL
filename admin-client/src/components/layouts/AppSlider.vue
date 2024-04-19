@@ -14,6 +14,16 @@
             <fas-icon :icon="faBook" />
             <span>Quản lý sách</span>
           </a-menu-item>
+          <a-menu-item key="publishers">
+            <router-link :to="{ name: 'publisher' }"> </router-link>
+            <fas-icon :icon="faIndustry" />
+            <span>Quản lý NXB</span>
+          </a-menu-item>
+          <a-menu-item key="authors">
+            <router-link :to="{ name: 'author' }"> </router-link>
+            <fas-icon :icon="faUserPen" />
+            <span>Quản lý tác giả</span>
+          </a-menu-item>
         </a-menu>
       </div>
       <div :style="{ padding: '5px' }">
@@ -31,7 +41,12 @@
 <script setup props="props" lang="ts">
 import { useAuthStore } from '@/stores'
 import { UserOutlined } from '@ant-design/icons-vue'
-import { faBook, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBook,
+  faIndustry,
+  faRightFromBracket,
+  faUserPen
+} from '@fortawesome/free-solid-svg-icons'
 
 const collapsed = defineModel('collapsed')
 const selectedKeys = defineModel('selectedKeys')

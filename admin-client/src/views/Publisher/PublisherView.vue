@@ -15,20 +15,20 @@
             <template #icon>
               <fas-icon :icon="faUserPlus" />
             </template>
-            Tạo người dùng
+            Tạo nhà xuất bản
           </a-button>
         </router-link>
       </template>
     </app-filter>
     <a-layout-content :style="{ margin: '0px 16px 24px 16px', backgroundColor: '#fff' }">
-      <template v-if="users.length === 0">
+      <template v-if="publishers.length === 0">
         <a-empty />
       </template>
       <template v-else>
         <a-layout :style="{ height: '100%', maxHeight: '100%', backgroundColor: '#fff' }">
           <div class="table-container">
             <a-table
-              :dataSource="users"
+              :dataSource="publishers"
               :columns="columns"
               :scroll="{ y: 'calc(100vh - 430px)' }"
               :pagination="{
@@ -37,7 +37,7 @@
                   `${range[0]}-${range[1]} of ${total} items`
               }"
               :customRow="
-                (record: IUser, index: any) => {
+                (record: IPublisher, index: any) => {
                   return {
                     onClick: () => {
                       router.push(`users/${record._id}`)
@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import { getAll } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
-import type { IUser } from '@/interfaces/user.interface'
+import type { IPublisher } from '@/interfaces/publisher.interface'
 import router from '@/router'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
@@ -115,7 +115,7 @@ const columns = [
 
 const route = useRoute()
 
-const users = ref<IUser[]>([])
+const publishers = ref<IPublisher[]>([])
 const query = ref('')
 
 const onSearch = () => {
@@ -131,9 +131,9 @@ const onSearch = () => {
 
 onMounted(async () => {
   try {
-    const results = await getAll<IUser>({ source: 'users', params: route.query })
+    const results = await getAll<IPublisher>({ source: 'publishers', params: route.query })
 
-    users.value = results
+    publishers.value = results
   } catch (error) {
     console.log(error)
   }
@@ -142,7 +142,7 @@ onMounted(async () => {
 onBeforeRouteUpdate(async (to, from) => {
   try {
     if (to.query.q !== from.query.q) {
-      users.value = await getAll<IUser>({ source: 'users', params: to.query })
+      publishers.value = await getAll<IPublisher>({ source: 'users', params: to.query })
     }
   } catch (error) {
     console.log(error)

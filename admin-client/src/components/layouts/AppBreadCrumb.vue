@@ -4,7 +4,7 @@
       <router-link :to="{ path: `/` }"> {{ viLang['home'] }} </router-link>
     </a-breadcrumb-item>
     <template v-for="path in paths" :key="path">
-      <a-breadcrumb-item>
+      <a-breadcrumb-item v-if="viLang[path]">
         <router-link :to="{ path: `/${path}` }"> {{ viLang[path] }} </router-link>
       </a-breadcrumb-item>
     </template>
@@ -19,6 +19,6 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const paths = computed(() => {
-  return route.fullPath.split('/').filter((path) => path !== '')
+  return route.path.split('/').filter((path) => path !== '')
 })
 </script>

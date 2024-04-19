@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Dependencies,
   Get,
   Middlewares,
   Param,
@@ -13,7 +14,7 @@ import validateBody from "@middleware/validate";
 import { PublisherCreateDTO } from "@publishers/dto";
 import PublisherService from "@publishers/publisher.service";
 
-// @Dependencies(PublisherService)
+@Dependencies(PublisherService)
 @Controller("/api/publishers", jwtMiddleware())
 class PublisherController {
   constructor(private publisherService: PublisherService) {}

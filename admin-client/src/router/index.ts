@@ -3,6 +3,7 @@ import BookView from '@/views/Book/BookView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
+import PublisherView from '@/views/Publisher/PublisherView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import UserEdit from '@/views/User/UserEdit.vue'
 import UserView from '@/views/User/UserView.vue'
@@ -44,6 +45,16 @@ const router = createRouter({
           path: 'books',
           name: 'book',
           component: BookView
+        },
+        {
+          path: 'publishers',
+          name: 'publisher',
+          component: PublisherView
+        },
+        {
+          path: 'authors',
+          name: 'author',
+          component: PublisherView
         }
       ]
     }

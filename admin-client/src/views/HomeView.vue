@@ -16,6 +16,8 @@ import AppBreadCrumb from '@/components/layouts/AppBreadCrumb.vue'
 import AppHeader from '@/components/layouts/AppHeader.vue'
 import AppSlider from '@/components/layouts/AppSlider.vue'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const selectedKeys = ref<string[]>(['users'])
 const collapsed = ref<boolean>(false)
 </script>

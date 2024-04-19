@@ -7,7 +7,13 @@ import { UserModel } from "./user.model";
 @Injectable()
 class UserService {
   getAllUser(query: UserQuery) {
-    const excludeField = ["firstName", "lastName", "email", "phoneNumber"];
+    const excludeField = [
+      "firstName",
+      "lastName",
+      "email",
+      "phoneNumber",
+      "address",
+    ];
     let filter = getFilterManyField(excludeField, query);
 
     // const filter = Object.keys(query).reduce((prev, key) => {

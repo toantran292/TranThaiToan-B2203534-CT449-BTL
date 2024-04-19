@@ -3,7 +3,7 @@ import { viLang } from "@root/constant";
 import { CustomError } from "@utils";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { mongo } from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import multer from "multer";
 
 const ServerError =
@@ -51,6 +51,15 @@ const ServerError =
       return res.status(400).json({
         statusCode: 400,
         status: "duplicate_data",
+        message,
+      });
+    }
+
+    if (err instanceof mongoose.Error.CastError) {
+      message = "Không tìm thấy";
+      return res.status(400).json({
+        statusCode: 400,
+        status: "not_found",
         message,
       });
     }
