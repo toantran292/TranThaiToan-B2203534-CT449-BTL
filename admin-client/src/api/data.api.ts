@@ -3,6 +3,7 @@ import api from '@/api/axiosInterceptor'
 const baseUrl = '/api'
 export interface IGetPayload {
   source: string
+  params?: any
 }
 export interface IGetOnePayload extends IGetPayload {
   id: string
@@ -16,8 +17,8 @@ export interface ICreatePayload<T = any> extends IGetPayload {
   data: T
 }
 
-export const getAll = <T = any>({ source }: IGetPayload) => {
-  return (api.get(`${baseUrl}/${source}`) as any as Promise<T[]>) || []
+export const getAll = <T = any>({ source, params = {} }: IGetPayload) => {
+  return (api.get(`${baseUrl}/${source}`, { params }) as any as Promise<T[]>) || []
 }
 
 export const getOne = <T = any>({ source, id }: IGetOnePayload) => {

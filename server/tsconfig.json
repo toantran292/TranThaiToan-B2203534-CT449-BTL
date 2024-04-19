@@ -36,6 +36,8 @@
       "@interfaces": ["src/interfaces/index"],
       "@auth/*": ["src/app/auth/*"],
       "@users/*": ["src/app/users/*"],
+      "@authors/*": ["src/app/authors/*"],
+      "@books/*": ["src/app/books/*"],
       "@root/*": ["src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

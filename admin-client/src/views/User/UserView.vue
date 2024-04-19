@@ -2,7 +2,12 @@
   <a-layout :style="{ height: '100%' }">
     <app-filter :title="'Quản lý người dùng'">
       <template #input>
-        <a-button type="primary">Test</a-button>
+        <a-input-search
+          v-model:value="query"
+          placeholder="input search text"
+          enter-button
+          @search="onSearch"
+        />
       </template>
       <template #action>
         <router-link :to="{ name: 'user:create' }">
@@ -65,6 +70,7 @@ import type { IUser } from '@/interfaces/user.interface'
 import router from '@/router'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
+import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
 const TitleGender: Record<string, string> = {
   unknow: '',
@@ -107,17 +113,36 @@ const columns = [
   }
 ]
 
+const route = useRoute()
+
 const users = ref<IUser[]>([])
+const query = ref('')
+
+const onSearch = () => {
+  router.replace({ query: { q: query.value } })
+}
 
 onMounted(async () => {
   try {
-    const results = await getAll<IUser>({ source: 'users' })
+    const results = await getAll<IUser>({ source: 'users', params: route.query })
 
     users.value = results
   } catch (error) {
     console.log(error)
   }
 })
+
+onBeforeRouteUpdate(async (to, from) => {
+  try {
+    console.log({ to, from })
+    if (to.query.q !== from.query.q) {
+      users.value = await getAll<IUser>({ source: 'users', params: to.query })
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 </script>
 <style>
 .table-container {

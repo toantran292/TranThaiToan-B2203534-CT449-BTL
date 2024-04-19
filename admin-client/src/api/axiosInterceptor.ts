@@ -68,7 +68,7 @@ api.interceptors.response.use(
         }
       }
     }
-
+    console.log(error)
     return Promise.reject('Lỗi')
   }
 )

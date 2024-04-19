@@ -1,5 +1,8 @@
 import { Document, ObjectId } from "mongoose";
 
+export interface UserQuery {
+  q: string;
+}
 export interface IUserDocument extends Document {
   _id: string | ObjectId;
   refreshToken: string;

@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@decorators";
 import jwtMiddleware from "@middleware/jwt.middleware";
 import permissionMiddleware from "@middleware/permission.middleware";
@@ -20,11 +21,8 @@ import UserService from "@users/user.service";
 class UserController {
   constructor(private userService: UserService) {}
   @Get()
-  async getAll() {
-    const ans = await this.userService.getAllUser();
-    const result: any[] = [];
-    for (let i = 1; i <= 500; i++) result.push(ans[0]);
-    return ans;
+  getAll(@Query() query) {
+    return this.userService.getAllUser(query);
   }
 
   @Post()
