@@ -1,4 +1,4 @@
-import { IAuthorDocument } from "@root/app/authors/author.interface";
+import { IAuthorDocument } from "@root/app/publisher/author.interface";
 
 export interface IBookDocument extends Document {
   name: string;

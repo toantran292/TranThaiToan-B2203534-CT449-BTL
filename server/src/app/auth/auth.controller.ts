@@ -11,26 +11,21 @@ import {
 } from "@decorators";
 import jwtMiddleware, { TYPE_JWT } from "@middleware/jwt.middleware";
 import validateBody from "@middleware/validate";
-import { IUserDocument } from "@users/user.interface";
-import UserSerivce from "@users/user.service";
-import { BadRequestError, verifyJwtRfToken } from "@utils";
+import { verifyJwtRfToken } from "@utils";
 import { Request } from "express";
-@Dependencies(AuthService, UserSerivce)
+@Dependencies(AuthService)
 @Controller("/auth")
 class AuthController {
-  constructor(
-    private authService: AuthService,
-    private userService: UserSerivce,
-  ) {}
+  constructor(private authService: AuthService) {}
   @Post("/register")
   @Middlewares(validateBody(AuthRegisterDTO))
-  async register(@Body() body: AuthRegisterDTO) {
-    const { email, password } = body;
-    const isUserExist: IUserDocument = await this.userService.getUserByEmail(
-      email,
-    );
+  async register(@Body<AuthRegisterDTO>() body) {
+    // const { email, password } = body;
+    // const isUserExist: IUserDocument = await this.userService.getUserByEmail(
+    //   email,
+    // );
 
-    if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
+    // if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
 
     return {};
     // const user = await this.userService.createUser({ email, password });
@@ -40,11 +35,8 @@ class AuthController {
 
   @Post("/login")
   @Middlewares(validateBody(AuthLogInDTO))
-  async login(@Body() body: AuthLogInDTO) {
-    const existingUser: IUserDocument = await this.userService.getUserByEmail(
-      body.email,
-    );
-    return this.authService.login(body, existingUser);
+  login(@Body() body: AuthLogInDTO) {
+    return this.authService.login(body);
   }
 
   @Post("/token")

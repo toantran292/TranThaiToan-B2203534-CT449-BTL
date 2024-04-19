@@ -15,6 +15,10 @@ const bookSchema: Schema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Author",
     },
+    publisher: {
+      type: Schema.Types.ObjectId,
+      ref: "Publisher",
+    },
   },
   bookOptions,
 );

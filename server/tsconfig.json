@@ -37,6 +37,7 @@
       "@auth/*": ["src/app/auth/*"],
       "@users/*": ["src/app/users/*"],
       "@authors/*": ["src/app/authors/*"],
+      "@publishers/*": ["src/app/publishers/*"],
       "@books/*": ["src/app/books/*"],
       "@root/*": ["src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,

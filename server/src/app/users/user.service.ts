@@ -1,4 +1,5 @@
 import { Injectable } from "@decorators";
+import { getFilterManyField } from "@root/utils/filter.util";
 import { CreateUserDTO, UpdateUserDTO } from "@users/dto";
 import { IUserDocument, UserQuery } from "./user.interface";
 import { UserModel } from "./user.model";
@@ -7,13 +8,7 @@ import { UserModel } from "./user.model";
 class UserService {
   getAllUser(query: UserQuery) {
     const excludeField = ["firstName", "lastName", "email", "phoneNumber"];
-    let filter = excludeField.reduce<any>(
-      (prev, key) => {
-        prev["$or"].push({ [key]: { $regex: new RegExp(query.q) } });
-        return prev;
-      },
-      { $or: [] },
-    );
+    let filter = getFilterManyField(excludeField, query);
 
     // const filter = Object.keys(query).reduce((prev, key) => {
     //   console.log(query[key]);

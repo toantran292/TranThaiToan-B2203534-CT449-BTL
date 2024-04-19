@@ -1,14 +1,20 @@
 import { AuthRegisterDTO } from "@auth/dto";
-import { Injectable } from "@decorators";
+import { Dependencies, Injectable } from "@decorators";
 import { IUserDocument } from "@users/user.interface";
+import UserService from "@users/user.service";
 import { Forbidden, signJwtRfToken, signJwtToken } from "@utils";
 
+@Dependencies(UserService)
 @Injectable()
 class AuthService {
-  async login(authRegisterDTO: AuthRegisterDTO, existingUser: IUserDocument) {
+  constructor(private userService: UserService) {}
+  async login(authRegisterDTO: AuthRegisterDTO) {
+    const { email, password } = authRegisterDTO;
     const _message_forbidden = "Sai tài khoản hoặc mật khẩu.";
 
-    const { password } = authRegisterDTO;
+    const existingUser: IUserDocument = await this.userService.getUserByEmail(
+      email,
+    );
 
     if (!existingUser) throw new Forbidden(_message_forbidden);
 

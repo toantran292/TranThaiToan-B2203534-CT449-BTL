@@ -29,3 +29,5 @@ export const MIDDLEWARES = "__MIDDLEWARES__";
 export const DEPENDENCIES = "__DEPENDENCIES__";
 
 export const INJECTABLE = "__INJECTABLE__";
+
+export const CREATED_BY = "__CREATE_BY__";

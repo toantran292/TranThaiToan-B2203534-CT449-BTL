@@ -1,6 +1,7 @@
 import {
   CONTROLLER_MIDDLEWARES,
   CONTROLLER_PREFIX,
+  CREATED_BY,
   DEPENDENCIES,
   HEADER,
   INTERCEPTOR,
@@ -87,7 +88,7 @@ export const mappingModuleDecorator =
   (controllers: any[] = [], extraModules: any[] = []): ClassDecorator =>
   (target) => {
     const modules = [...extraModules];
-
+    const instances: any = [];
     controllers.forEach((controller) => {
       if (!controller) {
         throw new Error("Controller cannot be null.");
@@ -98,12 +99,25 @@ export const mappingModuleDecorator =
       const controllerMiddlewares =
         Reflect.getMetadata(CONTROLLER_MIDDLEWARES, controller) || [];
 
-      const dependencies = Reflect.getMetadata(DEPENDENCIES, controller) || [];
+      const isCreated = (target) => {
+        return Reflect.getMetadata(CREATED_BY, target);
+      };
+      const getDependencies = (target: any) => {
+        const dependencies = Reflect.getMetadata(DEPENDENCIES, target) || [];
 
-      const dependenciesMapped = dependencies.map(
-        (dependency: any) => new dependency(),
-      );
+        return dependencies.map((dependency) => {
+          let instance = isCreated(dependency);
 
+          if (!instance) {
+            instance = new dependency(...getDependencies(dependency));
+            Reflect.defineMetadata(CREATED_BY, instance, dependency);
+            instances.push(instance);
+          }
+
+          return instance;
+        });
+      };
+      const dependenciesMapped = getDependencies(controller);
       const self = controller.prototype;
 
       const instance = new self.constructor(...dependenciesMapped);
@@ -149,22 +163,6 @@ export const mappingModuleDecorator =
               res: Response,
               next: NextFunction,
             ) => {
-              // const args: any[] = [];
-              // params
-              //   .sort((a, b) => a.parameterIndex - b.parameterIndex)
-              //   .forEach((param) => {
-              //     if (param.type)
-              //       if (param.type === ParameterType.REQUEST) args.push(req);
-              //       else if (param.type === ParameterType.RESPONSE)
-              //         args.push(res);
-              //       else if (param.type === ParameterType.NEXT) args.push(next);
-              //       else {
-              //         let type = req[param.type];
-              //         if (!isEmpty(param.property)) type = type[param.property];
-              //         args.push(type);
-              //       }
-              //   });
-
               const args: any = params
                 .sort((a, b) => a.parameterIndex - b.parameterIndex)
                 .reduce((acc: any, param) => {
@@ -234,6 +232,6 @@ export const mappingModuleDecorator =
           }
         });
     });
-
+    // console.log(instances);
     Reflect.defineMetadata(MODULE, modules, target.prototype);
   };

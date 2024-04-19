@@ -1,5 +1,8 @@
-import { Injectable } from "@decorators";
+import AuthorService from "@authors/author.service";
+import { Dependencies, Injectable } from "@decorators";
+import PublisherService from "@publishers/publisher.service";
 
+@Dependencies(PublisherService, AuthorService)
 @Injectable()
 class BookService {
   createBook() {}
