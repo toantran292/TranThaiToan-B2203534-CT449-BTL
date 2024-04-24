@@ -26,7 +26,7 @@ import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import * as zod from 'zod'
 
-const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
+const { handleSubmit, resetForm, defineField, meta } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),

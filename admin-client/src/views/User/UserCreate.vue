@@ -51,7 +51,11 @@ const { setFieldValue, handleSubmit } = useForm({
     })
   ),
   initialValues: {
+    firstName: '',
+    lastName: '',
     gender: 'unknow',
+    phoneNumber: '',
+    email: '',
     password: '',
     birthDay: new Date().toISOString(),
     isStaff: false,

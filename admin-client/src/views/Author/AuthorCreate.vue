@@ -22,13 +22,16 @@ import { notification } from 'ant-design-vue'
 import { useForm } from 'vee-validate'
 import * as zod from 'zod'
 
-const { setFieldValue, handleSubmit } = useForm({
+const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
       name: zod.string().min(1, 'Không được để trống')
     })
-  )
+  ),
+  initialValues: {
+    name: ''
+  }
 })
 
 const onSubmit = handleSubmit(

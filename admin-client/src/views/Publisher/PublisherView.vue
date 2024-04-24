@@ -1,6 +1,6 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Quản lý người dùng'">
+    <app-filter :title="'Quản lý nhà xuất bản'">
       <template #input>
         <a-input-search
           v-model:value="query"
@@ -10,7 +10,7 @@
         />
       </template>
       <template #action>
-        <router-link :to="{ name: 'user:create' }">
+        <router-link :to="{ name: 'publisher:create' }">
           <a-button type="primary">
             <template #icon>
               <fas-icon :icon="faUserPlus" />
@@ -40,23 +40,12 @@
                 (record: IPublisher, index: any) => {
                   return {
                     onClick: () => {
-                      router.push(`users/${record._id}`)
+                      router.push(`publishers/${record._id}`)
                     }
                   }
                 }
               "
-            >
-              <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'gender'">
-                  {{ TitleGender[record.gender] }}
-                </template>
-                <template v-else-if="column.key === 'isStaff'">
-                  <a-tag :color="record.isStaff ? '#87d068' : '#108ee9'">
-                    {{ record.isStaff ? 'Nhân viên' : 'Khách' }}
-                  </a-tag>
-                </template>
-              </template>
-            </a-table>
+            />
           </div>
         </a-layout>
       </template>
@@ -72,44 +61,17 @@ import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
-const TitleGender: Record<string, string> = {
-  unknow: '',
-  '0': 'Nam',
-  '1': 'Nữ'
-}
-
 const columns = [
   {
-    title: 'Họ',
-    dataIndex: 'lastName',
-    key: 'lastName',
+    title: 'Tên nhà xuất bản',
+    dataIndex: 'name',
+    key: 'name',
     width: 150
-  },
-  {
-    title: 'Tên',
-    dataIndex: 'firstName',
-    key: 'firstName',
-    width: 150
-  },
-  {
-    title: 'Số điện thoại',
-    key: 'phoneNumber',
-    dataIndex: 'phoneNumber'
   },
   {
     title: 'Địa chỉ',
     dataIndex: 'address',
     key: 'address'
-  },
-  {
-    title: 'Giới tính',
-    dataIndex: 'gender',
-    key: 'gender'
-  },
-  {
-    title: 'Loại tài khoản',
-    dataIndex: 'isStaff',
-    key: 'isStaff'
   }
 ]
 
@@ -119,12 +81,6 @@ const publishers = ref<IPublisher[]>([])
 const query = ref('')
 
 const onSearch = () => {
-  // const queryReduced = Object.keys(query.value).reduce<any>((prev, q: any) => {
-  //   if (query.value[q]) return { ...prev, [q]: query.value[q] }
-  //   return prev
-  // }, {})
-  // console.log({ queryReduced })
-
   if (query.value) router.replace({ query: { q: query.value } })
   else router.replace({})
 }
@@ -142,7 +98,7 @@ onMounted(async () => {
 onBeforeRouteUpdate(async (to, from) => {
   try {
     if (to.query.q !== from.query.q) {
-      publishers.value = await getAll<IPublisher>({ source: 'users', params: to.query })
+      publishers.value = await getAll<IPublisher>({ source: 'publishers', params: to.query })
     }
   } catch (error) {
     console.log(error)
