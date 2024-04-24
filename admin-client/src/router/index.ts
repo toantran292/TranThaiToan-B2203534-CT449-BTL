@@ -34,64 +34,75 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'user',
-          component: UserView,
-          children: []
-        },
-        {
-          path: 'create',
-          name: 'user:create',
-          component: UserCreate
-        },
-        {
-          path: ':id',
-          name: 'user:edit',
-          component: UserEdit
+          children: [
+            { path: '', name: 'user', component: UserView },
+            {
+              path: 'create',
+              name: 'user:create',
+              component: UserCreate
+            },
+            {
+              path: ':id',
+              name: 'user:edit',
+              component: UserEdit
+            }
+          ]
         },
         {
           path: 'books',
-          name: 'book',
-          component: BookView
-        },
-        {
-          path: 'books/create',
-          name: 'book:create',
-          component: BookCreate
-        },
-        {
-          path: 'books/:id',
-          name: 'book:edit',
-          component: BookEdit
+          children: [
+            { path: '', name: 'book', component: BookView },
+            {
+              path: 'create',
+              name: 'book:create',
+              component: BookCreate
+            },
+            {
+              path: ':id',
+              name: 'book:edit',
+              component: BookEdit
+            }
+          ]
         },
         {
           path: 'publishers',
-          name: 'publisher',
-          component: PublisherView
-        },
-        {
-          path: 'publishers/create',
-          name: 'publisher:create',
-          component: PublisherCreate
-        },
-        {
-          path: 'publishers/:id',
-          name: 'publisher:edit',
-          component: PublisherEdit
+          children: [
+            {
+              path: '',
+              name: 'publisher',
+              component: PublisherView
+            },
+            {
+              path: 'create',
+              name: 'publisher:create',
+              component: PublisherCreate
+            },
+            {
+              path: ':id',
+              name: 'publisher:edit',
+              component: PublisherEdit
+            }
+          ]
         },
         {
           path: 'authors',
-          name: 'author',
-          component: AuthorView
-        },
-        {
-          path: 'authors/create',
-          name: 'author:create',
-          component: AuthorCreate
-        },
-        {
-          path: 'authors/:id',
-          name: 'author:edit',
-          component: AuthorEdit
+          children: [
+            {
+              path: '',
+              name: 'author',
+              component: AuthorView
+            },
+            {
+              path: 'create',
+              name: 'author:create',
+              component: AuthorCreate
+            },
+            {
+              path: ':id',
+              name: 'author:edit',
+              component: AuthorEdit
+            }
+          ]
         }
       ]
     }

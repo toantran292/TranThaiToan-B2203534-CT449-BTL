@@ -1,6 +1,6 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Quản lý người dùng'">
+    <app-filter :title="'Quản lý sách'">
       <template #input>
         <a-input-search
           v-model:value="query"
@@ -10,25 +10,25 @@
         />
       </template>
       <template #action>
-        <router-link :to="{ name: 'user:create' }">
+        <router-link :to="{ name: 'book:create' }">
           <a-button type="primary">
             <template #icon>
               <fas-icon :icon="faUserPlus" />
             </template>
-            Tạo người dùng
+            Tạo sách
           </a-button>
         </router-link>
       </template>
     </app-filter>
     <a-layout-content :style="{ margin: '0px 16px 24px 16px', backgroundColor: '#fff' }">
-      <template v-if="users.length === 0">
+      <template v-if="books.length === 0">
         <a-empty />
       </template>
       <template v-else>
         <a-layout :style="{ height: '100%', maxHeight: '100%', backgroundColor: '#fff' }">
           <div class="table-container">
             <a-table
-              :dataSource="users"
+              :dataSource="books"
               :columns="columns"
               :scroll="{ y: 'calc(100vh - 430px)' }"
               :pagination="{
@@ -37,23 +37,21 @@
                   `${range[0]}-${range[1]} of ${total} items`
               }"
               :customRow="
-                (record: IUser, index: any) => {
+                (record: IBook, index: any) => {
                   return {
                     onClick: () => {
-                      router.push(`/${record._id}`)
+                      router.push(`books/${record._id}`)
                     }
                   }
                 }
               "
             >
               <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'gender'">
-                  {{ TitleGender[record.gender] }}
+                <template v-if="column.key === 'author'">
+                  {{ record.author.name }}
                 </template>
-                <template v-else-if="column.key === 'isStaff'">
-                  <a-tag :color="record.isStaff ? '#87d068' : '#108ee9'">
-                    {{ record.isStaff ? 'Nhân viên' : 'Khách' }}
-                  </a-tag>
+                <template v-if="column.key === 'publisher'">
+                  {{ record.publisher.name }}
                 </template>
               </template>
             </a-table>
@@ -66,74 +64,60 @@
 <script setup lang="ts">
 import { getAll } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
-import type { IUser } from '@/interfaces/user.interface'
+import type { IBook } from '@/interfaces/book.interface'
 import router from '@/router'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
-const TitleGender: Record<string, string> = {
-  unknow: '',
-  '0': 'Nam',
-  '1': 'Nữ'
-}
-
 const columns = [
   {
-    title: 'Họ',
-    dataIndex: 'lastName',
-    key: 'lastName',
-    width: 150
+    title: 'Tên sách',
+    dataIndex: 'name',
+    key: 'name'
   },
   {
-    title: 'Tên',
-    dataIndex: 'firstName',
-    key: 'firstName',
-    width: 150
+    title: 'Đơn giá',
+    dataIndex: 'unitCost',
+    key: 'unitCost'
   },
   {
-    title: 'Số điện thoại',
-    key: 'phoneNumber',
-    dataIndex: 'phoneNumber'
+    title: 'Tồn kho',
+    dataIndex: 'stock',
+    key: 'stock'
   },
   {
-    title: 'Địa chỉ',
-    dataIndex: 'address',
-    key: 'address'
+    title: 'Năm xuất bản',
+    dataIndex: 'publishYear',
+    key: 'publishYear'
   },
   {
-    title: 'Giới tính',
-    dataIndex: 'gender',
-    key: 'gender'
+    title: 'Tác giả',
+    dataIndex: 'author',
+    key: 'author'
   },
   {
-    title: 'Loại tài khoản',
-    dataIndex: 'isStaff',
-    key: 'isStaff'
+    title: 'Nhà xuất bản',
+    dataIndex: 'publisher',
+    key: 'publisher'
   }
 ]
 
 const route = useRoute()
 
-const users = ref<IUser[]>([])
+const books = ref<IBook[]>([])
 const query = ref('')
 
 const onSearch = () => {
-  // const queryReduced = Object.keys(query.value).reduce<any>((prev, q: any) => {
-  //   if (query.value[q]) return { ...prev, [q]: query.value[q] }
-  //   return prev
-  // }, {})
-  // console.log({ queryReduced })
-
   if (query.value) router.replace({ query: { q: query.value } })
   else router.replace({})
 }
 
 onMounted(async () => {
   try {
-    const results = await getAll<IUser>({ source: 'users', params: route.query })
+    const results = await getAll<IBook>({ source: 'books', params: route.query })
 
-    users.value = results
+    books.value = results
   } catch (error) {
     console.log(error)
   }
@@ -142,7 +126,7 @@ onMounted(async () => {
 onBeforeRouteUpdate(async (to, from) => {
   try {
     if (to.query.q !== from.query.q) {
-      users.value = await getAll<IUser>({ source: 'users', params: to.query })
+      books.value = await getAll<IBook>({ source: 'books', params: to.query })
     }
   } catch (error) {
     console.log(error)
