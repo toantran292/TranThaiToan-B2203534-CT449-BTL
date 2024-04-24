@@ -16,6 +16,7 @@
 import { create } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import UserForm from '@/components/users/UserForm.vue'
+import router from '@/router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { notification } from 'ant-design-vue'
 import { useForm } from 'vee-validate'
@@ -66,6 +67,7 @@ const onSubmit = handleSubmit(
         message: 'Tạo người dùng thành công',
         duration: 2.5
       })
+      router.push({ name: 'user' })
     } catch (error: any) {
       notification.error({
         message: 'Tạo người dùng thất bại',

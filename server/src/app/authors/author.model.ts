@@ -8,7 +8,6 @@ const authorOptions: SchemaOptions = {
 const authorSchema: Schema = new Schema(
   {
     name: { type: String, required: true },
-    address: { type: String },
   },
   authorOptions,
 );

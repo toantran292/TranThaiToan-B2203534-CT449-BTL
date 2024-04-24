@@ -59,6 +59,9 @@ const props = defineProps({
   select: Boolean
 })
 
-const inputStatus = computed(() => (errorMessage ? true : false))
+const inputStatus = computed(() => {
+  // console.log(errorMessage.value)
+  return errorMessage.value ? 'error' : ''
+})
 const { value, errorMessage } = useField(() => props.name!)
 </script>

@@ -69,7 +69,6 @@ const onSubmit = handleSubmit(
         message: 'Chỉnh sửa người dùng thành công',
         duration: 2.5
       })
-      router.push({ name: 'user' })
     } catch (error: any) {
       notification.error({
         message: 'Chỉnh sửa người dùng thất bại',

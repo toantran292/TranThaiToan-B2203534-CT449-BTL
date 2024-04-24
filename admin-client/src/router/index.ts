@@ -1,8 +1,13 @@
 import { useAuthStore } from '@/stores'
+import AuthorCreate from '@/views/Author/AuthorCreate.vue'
+import AuthorEdit from '@/views/Author/AuthorEdit.vue'
+import AuthorView from '@/views/Author/AuthorView.vue'
 import BookView from '@/views/Book/BookView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
+import PublisherCreate from '@/views/Publisher/PublisherCreate.vue'
+import PublisherEdit from '@/views/Publisher/PublisherEdit.vue'
 import PublisherView from '@/views/Publisher/PublisherView.vue'
 import UserCreate from '@/views/User/UserCreate.vue'
 import UserEdit from '@/views/User/UserEdit.vue'
@@ -52,9 +57,29 @@ const router = createRouter({
           component: PublisherView
         },
         {
+          path: 'publishers/create',
+          name: 'publisher:create',
+          component: PublisherCreate
+        },
+        {
+          path: 'publishers/:id',
+          name: 'publisher:edit',
+          component: PublisherEdit
+        },
+        {
           path: 'authors',
           name: 'author',
-          component: PublisherView
+          component: AuthorView
+        },
+        {
+          path: 'authors/create',
+          name: 'author:create',
+          component: AuthorCreate
+        },
+        {
+          path: 'authors/:id',
+          name: 'author:edit',
+          component: AuthorEdit
         }
       ]
     }

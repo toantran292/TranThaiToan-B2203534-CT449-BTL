@@ -1,4 +1,5 @@
 export interface IAuthor {
   name: string
-  address: string
+
+  _id?: string
 }
