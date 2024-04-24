@@ -18,6 +18,7 @@ import AppSlider from '@/components/layouts/AppSlider.vue'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
-const selectedKeys = ref<string[]>(['users'])
+const selectedKeys = ref<string[]>([route.path.split('/')[1]])
 const collapsed = ref<boolean>(false)
+// console.log(route.path.split('/')[1])
 </script>
