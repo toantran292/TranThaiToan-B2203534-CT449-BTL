@@ -5,6 +5,7 @@ import AuthorView from '@/views/Author/AuthorView.vue'
 import BookCreate from '@/views/Book/BookCreate.vue'
 import BookEdit from '@/views/Book/BookEdit.vue'
 import BookView from '@/views/Book/BookView.vue'
+import BorrowList from '@/views/Borrow/BorrowList.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
@@ -101,6 +102,16 @@ const router = createRouter({
               path: ':id',
               name: 'author:edit',
               component: AuthorEdit
+            }
+          ]
+        },
+        {
+          path: 'borrows',
+          children: [
+            {
+              path: '',
+              name: 'borrow',
+              component: BorrowList
             }
           ]
         }

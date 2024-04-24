@@ -1,6 +1,8 @@
+import { AuthPayload } from "@auth/interfaces/auth.interface";
 import { Injectable } from "@decorators";
 import { getFilterManyField } from "@root/utils/filter.util";
 import { CreateUserDTO, UpdateUserDTO } from "@users/dto";
+import { BadRequestError, Forbidden } from "@utils";
 import { IUserDocument, UserQuery } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -31,10 +33,17 @@ class UserService {
   async getUserByEmail(email: string): Promise<IUserDocument> {
     return (await UserModel.findOne({ email: email }).exec()) as IUserDocument;
   }
-  getUserById(id: string) {
-    return UserModel.findById(id);
+  async getUserById(id: string, user: AuthPayload) {
+    if (!user.isStaff && id !== user.userId) {
+      throw new Forbidden("Bạn không có quyền này");
+    }
+
+    const _user = await UserModel.findById(id).exec();
+    if (!_user) throw new BadRequestError("Không tìm thấy người dùng");
+    return user;
   }
   updateUserById(data: UpdateUserDTO, id: string) {
+    // this.getUserById(id);
     const filter = { _id: id };
     const updateOperation = { $set: data };
     const updateOptions = { new: true };

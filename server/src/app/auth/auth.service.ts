@@ -2,12 +2,33 @@ import { AuthRegisterDTO } from "@auth/dto";
 import { Dependencies, Injectable } from "@decorators";
 import { IUserDocument } from "@users/user.interface";
 import UserService from "@users/user.service";
-import { Forbidden, signJwtRfToken, signJwtToken } from "@utils";
+import {
+  BadRequestError,
+  Forbidden,
+  signJwtRfToken,
+  signJwtToken,
+} from "@utils";
 
 @Dependencies(UserService)
 @Injectable()
 class AuthService {
   constructor(private userService: UserService) {}
+  async register(authRegisterDTO: AuthRegisterDTO) {
+    const { email, password, phoneNumber } = authRegisterDTO;
+    const isUserExist: IUserDocument = await this.userService.getUserByEmail(
+      email,
+    );
+
+    if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
+
+    const user = await this.userService.createUser({
+      email,
+      password,
+      phoneNumber,
+    });
+    const data = this.signToken(user);
+    return data;
+  }
   async login(authRegisterDTO: AuthRegisterDTO) {
     const { email, password } = authRegisterDTO;
     const _message_forbidden = "Sai tài khoản hoặc mật khẩu.";

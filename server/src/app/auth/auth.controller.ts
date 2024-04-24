@@ -20,17 +20,7 @@ class AuthController {
   @Post("/register")
   @Middlewares(validateBody(AuthRegisterDTO))
   async register(@Body<AuthRegisterDTO>() body) {
-    // const { email, password } = body;
-    // const isUserExist: IUserDocument = await this.userService.getUserByEmail(
-    //   email,
-    // );
-
-    // if (isUserExist) throw new BadRequestError("Email đã tồn tại.");
-
-    return {};
-    // const user = await this.userService.createUser({ email, password });
-    // const data = this.authService.signToken(user);
-    // return data;
+    return this.authService.register(body);
   }
 
   @Post("/login")

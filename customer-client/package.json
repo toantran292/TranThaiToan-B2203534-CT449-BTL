@@ -20,8 +20,10 @@
     "@fortawesome/vue-fontawesome": "^3.0.6",
     "ant-design-vue": "^4.2.0",
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
+    "bootstrap-vue": "^2.23.1",
     "pinia": "^2.1.7",
-    "vue": "^3.4.21",
+    "vue": "^3.4.25",
     "vue-router": "^4.3.2",
     "vuetify": "^3.5.17"
   },

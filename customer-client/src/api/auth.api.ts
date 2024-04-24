@@ -20,6 +20,15 @@ export const login = async (payload: ILoginPayload) => {
   }
 }
 
+export const register = async (payload: ILoginPayload) => {
+  try {
+    const response = (await api.post('/auth/register', payload)) as ILoginResponse
+    return response
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 export const refreshToken = () => {
   return api.post('/auth/token', {
     refreshToken: localStorage.getItem(__REFRESH_TOKEN__)

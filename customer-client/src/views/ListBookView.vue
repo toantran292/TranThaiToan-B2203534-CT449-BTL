@@ -1,4 +1,5 @@
 <template>
+  <banner />
   <div :style="{}">
     <!-- {{ books }}   -->
     <a-space wrap>
@@ -11,6 +12,7 @@
 
 <script setup lang="ts">
 import { getAll } from '@/api/data.api'
+import Banner from '@/components/Banner/Banner.vue'
 import ProductCard from '@/components/Card/ProductCard.vue'
 import type { IBook } from '@/interfaces/book.interface'
 import { onMounted, ref } from 'vue'
@@ -23,7 +25,7 @@ const route = useRoute()
 onMounted(async () => {
   try {
     const results = await getAll<IBook>({ source: 'books', params: route.query })
-
+    // console.log
     books.value = results
   } catch (error) {
     console.log(error)

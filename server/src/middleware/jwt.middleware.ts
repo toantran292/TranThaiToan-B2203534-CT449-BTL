@@ -11,6 +11,7 @@ export enum TYPE_JWT {
 function jwtMiddleware(type: TYPE_JWT = TYPE_JWT.AUTHEN) {
   return async (req: Request, res: Response, _next: NextFunction) => {
     let _token: string = "";
+    // if()
     try {
       const { authorization } = req.headers;
 

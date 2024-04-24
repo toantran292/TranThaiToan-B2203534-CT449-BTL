@@ -25,11 +25,14 @@ class BookService {
     return newBook;
   }
 
-  getAllBook(query) {
+  async getAllBook(query) {
     let filter = getFilterManyField(["name"], query);
-    return BookModel.find(filter)
+    const books = await BookModel.find(filter)
       .populate("author", "name")
-      .populate("publisher", "name");
+      .populate("publisher", "name")
+      .exec();
+    // books.stock =
+    return books;
   }
 
   getBookById(id: string | ObjectId) {

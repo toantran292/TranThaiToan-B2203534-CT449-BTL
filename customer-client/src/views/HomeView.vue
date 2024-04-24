@@ -4,7 +4,7 @@
       <app-header />
       <app-filter :title="'??'" />
       <a-layout-content :style="{ minHeight: '280px', padding: '0 20vw 0 20vw' }">
-        <banner />
+
         <router-view />
       </a-layout-content>
     </a-layout>

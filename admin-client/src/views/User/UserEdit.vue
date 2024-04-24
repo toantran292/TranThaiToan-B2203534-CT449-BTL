@@ -95,18 +95,19 @@ onMounted(async () => {
     const data = await getOne<IUser>({ source: 'users', id: route.params.id as string })
     resetForm({ values: data })
   } catch (error: any) {
-    console.log(error)
+    // console.log(error)
     if (error.status === 'not_found') {
       notification.error({
         message: 'Không tìm thấy người dùng',
         duration: 2.5
       })
-      // await sleep(500)
-      console.log(route)
-      router.push({ name: 'user' })
-      // console.log(router.)
-      // route.replace()
+    } else {
+      notification.error({
+        message: error.message,
+        duration: 2.5
+      })
     }
+    router.push({ name: 'user' })
   }
 })
 </script>

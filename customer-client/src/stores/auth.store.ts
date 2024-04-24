@@ -1,4 +1,4 @@
-import { login } from '@/api/auth.api'
+import { login, register } from '@/api/auth.api'
 import { __ACCESS_TOKEN__, __REFRESH_TOKEN__, __USER__ } from '@/constants/localStorage'
 import type { ILoginPayload } from '@/interfaces'
 import router from '@/router'
@@ -14,6 +14,35 @@ export const useAuthStore = defineStore({
     returnUrl: null as string | null
   }),
   actions: {
+    async register(payload: ILoginPayload) {
+      try {
+        await sleep(1000)
+        const { user, token } = await register(payload)
+
+        console.log(user)
+
+        this.user = user
+
+        localStorage.setItem(__USER__, JSON.stringify(user))
+        localStorage.setItem(__ACCESS_TOKEN__, token.accessToken)
+        localStorage.setItem(__REFRESH_TOKEN__, token.refreshToken)
+
+        notification.success({
+          message: 'Đăng ký thành công',
+          description: 'Hệ thống đang chuyển hướng bạn đến trang chủ!',
+          duration: 2.5
+        })
+
+        router.push(this.returnUrl || '/')
+      } catch (error: any) {
+        notification.error({
+          message: 'Đăng ký thất bại',
+          description: error.message,
+          duration: 2.5
+        })
+        return Promise.reject(error)
+      }
+    },
     async login(payload: ILoginPayload) {
       try {
         await sleep(1000)
@@ -46,7 +75,7 @@ export const useAuthStore = defineStore({
     logout(type: keyof NotificationInstance, opts: NotificationArgsProps) {
       this.user = null
       localStorage.removeItem(__USER__)
-      router.push('/login')
+      router.push('/')
       notification[type](opts)
     }
   }
