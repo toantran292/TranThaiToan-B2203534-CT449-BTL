@@ -33,18 +33,18 @@ const router = createRouter({
       component: HomeView,
       children: [
         {
-          path: 'users',
+          path: '',
           name: 'user',
           component: UserView,
           children: []
         },
         {
-          path: 'users/create',
+          path: 'create',
           name: 'user:create',
           component: UserCreate
         },
         {
-          path: 'users/:id',
+          path: ':id',
           name: 'user:edit',
           component: UserEdit
         },
