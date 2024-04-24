@@ -1,5 +1,4 @@
 import {
-  IsDateString,
   IsMongoId,
   IsNotEmpty,
   IsNumber,
@@ -15,13 +14,13 @@ class BookCreateDTO {
 
   @IsNumber()
   @Min(0)
-  unicost: number;
+  unitCost: number;
 
   @IsNumber()
   @Min(0)
   stock: number;
 
-  @IsDateString()
+  @IsNumber()
   publishYear: number;
 
   @IsMongoId()

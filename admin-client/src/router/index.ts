@@ -2,6 +2,8 @@ import { useAuthStore } from '@/stores'
 import AuthorCreate from '@/views/Author/AuthorCreate.vue'
 import AuthorEdit from '@/views/Author/AuthorEdit.vue'
 import AuthorView from '@/views/Author/AuthorView.vue'
+import BookCreate from '@/views/Book/BookCreate.vue'
+import BookEdit from '@/views/Book/BookEdit.vue'
 import BookView from '@/views/Book/BookView.vue'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -50,6 +52,16 @@ const router = createRouter({
           path: 'books',
           name: 'book',
           component: BookView
+        },
+        {
+          path: 'books/create',
+          name: 'book:create',
+          component: BookCreate
+        },
+        {
+          path: 'books/:id',
+          name: 'book:edit',
+          component: BookEdit
         },
         {
           path: 'publishers',

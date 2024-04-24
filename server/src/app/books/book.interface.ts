@@ -1,4 +1,5 @@
-import { IAuthorDocument } from "@root/app/publisher/author.interface";
+import { IAuthorDocument } from "@authors/author.interface";
+import { IPublisherDocument } from "@publishers/publisher.interface";
 
 export interface IBookDocument extends Document {
   name: string;
@@ -6,4 +7,5 @@ export interface IBookDocument extends Document {
   stock: number;
   publishYear: number;
   author: IAuthorDocument;
+  publisher: IPublisherDocument;
 }

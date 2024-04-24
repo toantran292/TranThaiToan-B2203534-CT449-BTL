@@ -2,6 +2,7 @@ import { AuthorModel } from "@authors/author.model";
 import { AuthorCreateDTO } from "@authors/dto";
 import { Injectable } from "@decorators";
 import { getFilterManyField } from "@root/utils/filter.util";
+import { ObjectId } from "mongoose";
 
 @Injectable()
 class AuthorService {
@@ -9,7 +10,7 @@ class AuthorService {
     let filter = getFilterManyField(["name", "address"], query);
     return AuthorModel.find(filter);
   }
-  getAuthorById(id: string) {
+  getAuthorById(id: string | ObjectId) {
     return AuthorModel.findById(id);
   }
   updateAuthorById(data: AuthorCreateDTO, id: string) {

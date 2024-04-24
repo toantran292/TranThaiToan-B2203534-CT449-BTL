@@ -14,7 +14,7 @@
       </a-layout-content>
       <a-layout-footer :style="{ backgroundColor: '#fff', padding: '12px' }">
         <a-flex justify="right" :gap="10">
-          <router-link :to="{ name: 'author' }">
+          <router-link :to="{ name: 'publisher' }">
             <a-button type="primary" danger> Trở về</a-button>
           </router-link>
           <a-button type="primary" html-type="submit" :disabled="!dirty">{{

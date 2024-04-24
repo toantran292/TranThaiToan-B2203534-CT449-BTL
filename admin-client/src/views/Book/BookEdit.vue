@@ -7,16 +7,16 @@
         backgroundColor: '#fff'
       }"
     >
-      <author-form :_id @submit="onSubmit" :dirty="meta.dirty" />
+      <book-form :_id @submit="onSubmit" :dirty="meta.dirty" />
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
 import { getOne, updateOne } from '@/api/data.api'
-import AuthorForm from '@/components/authors/AuthorForm.vue'
+import BookForm from '@/components/books/BookForm.vue'
 import AppFilter from '@/components/layouts/AppFilter.vue'
-import type { IAuthor } from '@/interfaces/authors.interface'
+import type { IBook } from '@/interfaces/book.interface'
 import router from '@/router'
 // import router from '@/router'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -30,7 +30,12 @@ const { handleSubmit, resetForm, defineField, meta } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
-      name: zod.string().min(1, 'Không được để trống')
+      name: zod.string().min(1, 'Không được để trống'),
+      unitCost: zod.coerce.number().min(0, 'Không được là số âm'),
+      stock: zod.coerce.number().min(0, 'Không được là số âm'),
+      publishYear: zod.coerce.number(),
+      author: zod.string().min(1, 'Không được để trống'),
+      publisher: zod.string().min(1, 'Không được để trống')
     })
   )
 })
@@ -40,15 +45,15 @@ const route = useRoute()
 const onSubmit = handleSubmit(
   async (values: any) => {
     try {
-      await updateOne({ source: 'authors', id: route.params.id as string, data: values })
+      await updateOne({ source: 'books', id: route.params.id as string, data: values })
       notification.success({
-        message: 'Chỉnh sửa tác giả thành công',
+        message: 'Chỉnh sửa sách thành công',
         duration: 2.5
       })
-      router.push({ name: 'author' })
+      router.push({ name: 'book' })
     } catch (error: any) {
       notification.error({
-        message: 'Chỉnh sửa tác giả thất bại',
+        message: 'Chỉnh sửa sách thất bại',
         description: error.message,
         duration: 2.5
       })
@@ -63,7 +68,7 @@ const [_id] = defineField('_id')
 
 onMounted(async () => {
   try {
-    const data = await getOne<IAuthor>({ source: 'authors', id: route.params.id as string })
+    const data = await getOne<IBook>({ source: 'books', id: route.params.id as string })
     resetForm({ values: data })
   } catch (error: any) {
     console.log(error)
@@ -72,7 +77,7 @@ onMounted(async () => {
         message: 'Không tìm thấy người dùng',
         duration: 2.5
       })
-      router.push({ name: 'author' })
+      router.push({ name: 'book' })
     }
   }
 })

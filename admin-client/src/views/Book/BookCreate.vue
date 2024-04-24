@@ -7,14 +7,14 @@
         backgroundColor: '#fff'
       }"
     >
-      <author-form @submit="onSubmit" />
+      <book-form @submit="onSubmit" />
     </a-layout-content>
   </a-layout>
 </template>
 
 <script setup lang="ts">
 import { create } from '@/api/data.api'
-import AuthorForm from '@/components/authors/AuthorForm.vue'
+import BookForm from '@/components/books/BookForm.vue'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import router from '@/router'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -26,11 +26,21 @@ const { handleSubmit } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
-      name: zod.string().min(1, 'Không được để trống')
+      name: zod.string().min(1, 'Không được để trống'),
+      unitCost: zod.number().min(0, 'Không được là số âm'),
+      stock: zod.number().min(0, 'Không được là số âm'),
+      publishYear: zod.number(),
+      author: zod.string().min(1, 'Không được để trống'),
+      publisher: zod.string().min(1, 'Không được để trống')
     })
   ),
   initialValues: {
-    name: ''
+    name: '',
+    unitCost: 0,
+    stock: 0,
+    publishYear: new Date().getFullYear(),
+    author: '',
+    publisher: ''
   }
 })
 
@@ -38,15 +48,15 @@ const onSubmit = handleSubmit(
   async (values: any) => {
     // console.log(values)
     try {
-      await create({ source: 'authors', data: values })
+      await create({ source: 'books', data: values })
       notification.success({
-        message: 'Tạo tác giả thành công',
+        message: 'Thêm sách thành công',
         duration: 2.5
       })
-      router.push({ name: 'author' })
+      router.push({ name: 'book' })
     } catch (error: any) {
       notification.error({
-        message: 'Tạo tác giả thất bại',
+        message: 'Thêm sách thất bại',
         description: error.message,
         duration: 2.5
       })

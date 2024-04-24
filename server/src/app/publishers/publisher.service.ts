@@ -2,6 +2,7 @@ import { Injectable } from "@decorators";
 import { PublisherCreateDTO } from "@publishers/dto";
 import { PublisherModel } from "@publishers/publisher.model";
 import { getFilterManyField } from "@root/utils/filter.util";
+import { ObjectId } from "mongoose";
 
 @Injectable()
 class PublisherService {
@@ -9,7 +10,7 @@ class PublisherService {
     let filter = getFilterManyField(["name", "address"], query);
     return PublisherModel.find(filter);
   }
-  getPublisherById(id: string) {
+  getPublisherById(id: string | ObjectId) {
     return PublisherModel.findById(id);
   }
   updatePublisherById(data: PublisherCreateDTO, id: string) {

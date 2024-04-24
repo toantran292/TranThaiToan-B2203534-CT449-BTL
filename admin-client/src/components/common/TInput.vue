@@ -33,7 +33,15 @@
       <a-select v-else-if="select" v-model:value="value" :style="{ width: '100%' }">
         <slot />
       </a-select>
-      <a-input v-else :status="inputStatus" :id="name" :name v-model:value="value" :placeholder />
+      <a-input
+        v-else
+        :status="inputStatus"
+        :id="name"
+        :name
+        v-model:value="value"
+        :placeholder
+        :type="type ? type : 'text'"
+      />
     </a-col>
   </a-row>
   <a-row>
@@ -56,7 +64,8 @@ const props = defineProps({
   datePicker: Boolean,
   password: Boolean,
   isSwitch: Boolean,
-  select: Boolean
+  select: Boolean,
+  type: String
 })
 
 const inputStatus = computed(() => {

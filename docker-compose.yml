@@ -20,7 +20,7 @@ services:
     image: node:18
     container_name: customer_client
     environment:
-      - VITE_APP_ENDPOINT=http://express_server:3000
+      - VITE_APP_ENDPOINT=http://localhost:3000
     ports:
       - 3002:3002
     working_dir: /app
