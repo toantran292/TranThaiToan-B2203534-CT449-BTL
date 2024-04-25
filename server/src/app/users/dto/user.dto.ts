@@ -7,35 +7,35 @@ import {
 } from "class-validator";
 
 export class CreateUserDTO {
-  // @IsString()
-  // @IsNotEmpty()
-  // firstName: string;
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // lastName: string;
+  @IsString()
+  @IsNotEmpty()
+  lastName: string;
 
-  // @IsDateString()
-  // @IsNotEmpty()
-  // birthDay: Date;
+  @IsDateString()
+  @IsNotEmpty()
+  birthDay: Date;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // address: string;
+  @IsString()
+  @IsNotEmpty()
+  address: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // gender: "unknow" | "0" | "1";
+  @IsString()
+  @IsNotEmpty()
+  gender: "unknow" | "0" | "1";
 
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
 
-  // @IsBoolean()
-  // isStaff: boolean;
+  @IsBoolean()
+  isStaff: boolean;
 
-  // @IsString()
-  // avatar: string;
+  @IsString()
+  avatar: string;
 
   @IsEmail({}, { message: "Trường email bạn nhập không phải định dạng email" })
   @IsNotEmpty({ message: "Trường email không được để trống." })

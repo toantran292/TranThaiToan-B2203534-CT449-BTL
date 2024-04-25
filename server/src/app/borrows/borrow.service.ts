@@ -64,7 +64,7 @@ class BorrowService {
     const book = await this.bookService.getBookById(borrowBook.book);
     if (!book) throw new BadRequestError("Không tìm thấy thông tin mượn");
 
-    book.stock = book.stock++;
+    book.stock = book.stock + 1;
     book.save();
     borrowBook.actualReturnDate = new Date();
     borrowBook.save();

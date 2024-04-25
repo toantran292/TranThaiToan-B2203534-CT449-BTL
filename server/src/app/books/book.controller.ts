@@ -37,8 +37,9 @@ class BookController {
   }
 
   @Get("/:id")
-  getOne(@Param("id") id) {
-    return this.bookService.getBookById(id);
+  async getOne(@Param("id") id) {
+    const book = this.bookService.getBookById(id);
+    return (await book).toJSON();
   }
 
   @Patch("/:id")

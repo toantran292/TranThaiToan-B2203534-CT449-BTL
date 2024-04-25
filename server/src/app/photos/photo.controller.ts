@@ -12,6 +12,12 @@ class PhotoController {
   uploadAvatar(@Req<Request>("file") file: Express.Multer.File | undefined) {
     return this.photoService.getImagePath(file, "avatar");
   }
+
+  @Post("/cover")
+  @UploadFile("cover")
+  uploadCover(@Req<Request>("file") file: Express.Multer.File | undefined) {
+    return this.photoService.getImagePath(file, "cover");
+  }
 }
 
 export default PhotoController;

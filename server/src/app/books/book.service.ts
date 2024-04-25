@@ -22,7 +22,7 @@ class BookService {
 
     const newBook = new BookModel(data);
     await newBook.save();
-    return newBook;
+    return newBook.toJSON();
   }
 
   async getAllBook(query) {
@@ -35,8 +35,11 @@ class BookService {
     return books;
   }
 
-  getBookById(id: string | ObjectId) {
-    return BookModel.findById(id);
+  async getBookById(id: string | ObjectId) {
+    const book = await BookModel.findById(id).exec();
+    if (!book) throw new BadRequestError("Không tìm thấy sách");
+
+    return book;
   }
 
   updateBookById(data: BookCreateDTO, id: string) {

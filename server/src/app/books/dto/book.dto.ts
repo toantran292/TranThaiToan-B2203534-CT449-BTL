@@ -2,6 +2,7 @@ import {
   IsMongoId,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   Min,
 } from "class-validator";
@@ -26,6 +27,10 @@ class BookCreateDTO {
   @IsMongoId()
   @IsNotEmpty()
   author: ObjectId;
+
+  @IsString()
+  @IsOptional()
+  cover: string;
 
   @IsMongoId()
   @IsNotEmpty()

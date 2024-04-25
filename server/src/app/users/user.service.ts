@@ -40,7 +40,7 @@ class UserService {
 
     const _user = await UserModel.findById(id).exec();
     if (!_user) throw new BadRequestError("Không tìm thấy người dùng");
-    return user;
+    return _user.toJSON();
   }
   updateUserById(data: UpdateUserDTO, id: string) {
     // this.getUserById(id);
