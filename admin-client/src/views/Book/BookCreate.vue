@@ -1,6 +1,6 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Tạo người tác giả'" :hasToolBox="false" />
+    <app-filter :title="'Thêm Sách'" :hasToolBox="false" />
     <a-layout-content
       :style="{
         margin: '0px 16px 24px 16px',
@@ -27,9 +27,9 @@ const { handleSubmit } = useForm({
     zod.object({
       _id: zod.string().optional(),
       name: zod.string().min(1, 'Không được để trống'),
-      unitCost: zod.number().min(0, 'Không được là số âm'),
-      stock: zod.number().min(0, 'Không được là số âm'),
-      publishYear: zod.number(),
+      unitCost: zod.coerce.number().min(0, 'Không được là số âm'),
+      stock: zod.coerce.number().min(0, 'Không được là số âm'),
+      publishYear: zod.coerce.number(),
       author: zod.string().min(1, 'Không được để trống'),
       publisher: zod.string().min(1, 'Không được để trống')
     })

@@ -24,6 +24,11 @@
             <fas-icon :icon="faUserPen" />
             <span>Quản lý tác giả</span>
           </a-menu-item>
+          <a-menu-item key="borrows">
+            <router-link :to="{ name: 'borrow' }"> </router-link>
+            <fas-icon :icon="faUserPen" />
+            <span>Quản lý mượn sách</span>
+          </a-menu-item>
         </a-menu>
       </div>
       <div :style="{ padding: '5px' }">

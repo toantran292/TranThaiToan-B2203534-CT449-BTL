@@ -1,6 +1,6 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Sửa người dùng'" :hasToolBox="false" />
+    <app-filter :title="'Sửa nhà xuất bản'" :hasToolBox="false" />
     <a-layout-content
       :style="{
         margin: '0px 16px 24px 16px',

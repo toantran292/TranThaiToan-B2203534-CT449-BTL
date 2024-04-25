@@ -1,7 +1,9 @@
 <template>
   <a-layout-header :style="{ background: '#fff', padding: '0 20vw 0 20vw' }">
     <a-flex justify="space-between" align="center">
-      <div class="menu"></div>
+      <div class="menu">
+        <router-link :to="{ name: 'books' }">Trang Chủ</router-link>
+      </div>
       <template v-if="!auth.user">
         <a-space gap="3">
           <a-button @click="() => router.push('/register')">Đăng ký</a-button>

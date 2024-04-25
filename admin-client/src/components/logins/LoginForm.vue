@@ -39,8 +39,8 @@ import { reactive, ref } from 'vue'
 const loading = ref<boolean>(false)
 
 const formState = reactive<ILoginPayload>({
-  email: 'admin@gmail.com',
-  password: '12345678'
+  email: '',
+  password: ''
 })
 
 const handleSubmit = async () => {

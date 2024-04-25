@@ -1,13 +1,13 @@
 <template>
   <a-layout :style="{ height: '100%' }">
-    <app-filter :title="'Sửa người dùng'" :hasToolBox="false" />
+    <app-filter :title="'Chỉnh sửa sách'" :hasToolBox="false" />
     <a-layout-content
       :style="{
         margin: '0px 16px 24px 16px',
         backgroundColor: '#fff'
       }"
     >
-      <book-form :_id @submit="onSubmit" :dirty="meta.dirty" />
+      <book-form :_id @submit="onSubmit" :dirty="meta.dirty" @changeImg="handleChangeCover" />
     </a-layout-content>
   </a-layout>
 </template>
@@ -26,10 +26,11 @@ import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import * as zod from 'zod'
 
-const { handleSubmit, resetForm, defineField, meta } = useForm({
+const { setFieldValue, handleSubmit, resetForm, defineField, meta } = useForm({
   validationSchema: toTypedSchema(
     zod.object({
       _id: zod.string().optional(),
+      cover: zod.string().optional(),
       name: zod.string().min(1, 'Không được để trống'),
       unitCost: zod.coerce.number().min(0, 'Không được là số âm'),
       stock: zod.coerce.number().min(0, 'Không được là số âm'),
@@ -45,6 +46,9 @@ const route = useRoute()
 const onSubmit = handleSubmit(
   async (values: any) => {
     try {
+      const regex = /\/[^/]+\/(.+)$/
+      const result = values.cover.match(regex)
+      if (result) values.cover = result[1]
       await updateOne({ source: 'books', id: route.params.id as string, data: values })
       notification.success({
         message: 'Chỉnh sửa sách thành công',
@@ -64,7 +68,12 @@ const onSubmit = handleSubmit(
   }
 )
 
+const [cover] = defineField('cover')
 const [_id] = defineField('_id')
+
+const handleChangeCover = (url: string) => {
+  setFieldValue('cover', url)
+}
 
 onMounted(async () => {
   try {

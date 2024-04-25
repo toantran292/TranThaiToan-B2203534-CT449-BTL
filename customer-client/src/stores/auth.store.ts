@@ -19,7 +19,7 @@ export const useAuthStore = defineStore({
         await sleep(1000)
         const { user, token } = await register(payload)
 
-        console.log(user)
+        if (user.isStaff) throw new Error()
 
         this.user = user
 

@@ -19,6 +19,8 @@ export const useAuthStore = defineStore({
         await sleep(1000)
         const { user, token } = await login(payload)
 
+        if (!user.isStaff) throw new Error()
+
         this.user = user
 
         localStorage.setItem(__USER__, JSON.stringify(user))

@@ -20,13 +20,26 @@
               :customRow="
                 (record: any, index: any) => {
                   return {
-                    onClick: () => {
-                      router.push(`borrows/${record._id}`)
-                    }
+                    onClick: () => {}
                   }
                 }
               "
-            />
+            >
+              <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'book'">
+                  {{ record.book.name }}
+                </template>
+                <template v-else-if="column.key === 'borrowedDay'">
+                  {{ formatDateISOStringToDDMMYYYY(record.borrowedDay) }}
+                </template>
+                <template v-else-if="column.key === 'estimatedReturnDate'">
+                  {{ formatDateISOStringToDDMMYYYY(record.estimatedReturnDate) }}
+                </template>
+                <template v-else-if="column.key === 'actualReturnDate'">
+                  {{ formatDateISOStringToDDMMYYYY(record.actualReturnDate) }}
+                </template>
+              </template>
+            </a-table>
           </div>
         </a-layout>
       </template>
@@ -37,23 +50,37 @@
 import { getAll } from '@/api/data.api'
 import AppFilter from '@/components/layouts/AppFilter.vue'
 import router from '@/router'
+import { formatDateISOStringToDDMMYYYY } from '@/utils'
 import { onMounted, ref } from 'vue'
 import { onBeforeRouteUpdate, useRoute } from 'vue-router'
 
 const columns = [
   {
-    title: 'Tên nhà xuất bản',
-    dataIndex: 'name',
-    key: 'name',
+    title: 'Tên sách',
+    dataIndex: 'book.name',
+    key: 'book',
     width: 150
   },
   {
-    title: 'Địa chỉ',
-    dataIndex: 'address',
-    key: 'address'
+    title: 'Ngày mượn',
+    dataIndex: 'borrowedDay',
+    key: 'borrowedDay'
+  },
+  {
+    title: 'Hạn trả',
+    dataIndex: 'estimatedReturnDate',
+    key: 'estimatedReturnDate'
+  },
+  {
+    title: 'Ngày đã trả',
+    dataIndex: 'actualReturnDate',
+    key: 'actualReturnDate'
   }
+  // {
+  //   title: 'Thao tác',
+  //   key: 'action'
+  // }
 ]
-
 const route = useRoute()
 
 const borrows = ref<any[]>([])
